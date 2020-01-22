@@ -1,0 +1,9 @@
+template might not exist or might not be accessible
+
+    本机可以正常访问网站,但是发布到服务器上后就会报这个错误
+    spring: 
+        thymeleaf:
+            prefix: classpath:/templates/
+            suffix: .html
+    
+    需要手动设置前缀,不然可能因为莫名其妙的原因报这个错误,code是500

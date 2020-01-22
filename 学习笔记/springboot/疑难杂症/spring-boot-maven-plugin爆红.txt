@@ -1,0 +1,20 @@
+可以尝试在maven的配置文件中的<profiles>标签内添加以下内容:
+
+	使用阿里的仓库
+
+<profile>  
+	<id>spring plugins</id>  
+
+	<activation>  
+		<jdk>spring plugins</jdk>  
+	</activation>  
+
+	<pluginRepositories>  
+		<pluginRepository>  
+			<id>spring plugins</id>  
+			<name>Spring plugins</name>  
+			<url>https://maven.aliyun.com/repository/spring-plugin</url>  
+			<layout>default</layout>  
+		</pluginRepository>  
+	</pluginRepositories>  
+</profile>  

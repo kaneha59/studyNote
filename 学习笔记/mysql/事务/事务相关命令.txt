@@ -1,0 +1,11 @@
+手动使用事务的语句
+    1.开启事务
+        BEGIN;
+    2.提交事务
+        COMMIT;
+    3.回滚
+        ROLLBACK;
+
+设置自动提交
+    SET AUTOCOMMIT=1    --开启(或者是on)
+    SET AUTOCOMMIT=0    --关闭(或者是off)

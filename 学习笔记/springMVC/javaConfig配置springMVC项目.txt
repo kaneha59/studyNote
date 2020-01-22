@@ -1,0 +1,29 @@
+一.回想一下使用XML配置mvc项目时的过程?
+    我们要使用web.xml来进行配置
+        1.配置前端控制器
+        2.配置监听器ContextLoaderListener,用于加载spring上下文的配置文件
+        3.配置spring应用上下文
+
+二.使用javaConfig配置MVC项目时,和使用web.xml配置步骤是一样的,只是过程完全由java类完成
+    使用配置类来替代web.xml
+        1.配置前端控制器
+            新建一个类,继承AbstractAnnotationConfigDispatcherServletInitializer
+                XXXXXInitializer extends AbstractAnnotationConfigDispatcherServletInitializer
+            容器会查找该实现类,并同时创建DispatcherServlet和ContextLoaderListener
+            ***继承该类需要重写3个方法,分别设定了spring和MVC的配置类文件和前端控制器的映射路径***
+        2.配置监听器ContextLoaderListener,用于加载spring上下文的配置文件
+            已经在上一步中被创建
+        3.配置spring应用上下文
+            已经在第一步中实现
+
+三.关于MVC的配置类
+    MVC的配置类需要实现WebMvcConfigurer接口,并添加@EnableWebMvc注解,来实装MVC的默认组件
+        @EnableWebMvc
+        public class SpringMvcConfig implements WebMvcConfigurer
+
+四.关于WebApplicationInitializer 
+    WebApplicationInitializer的实现类会被自动加载并用于配置Servlet应用上下文(通过SpringServletContainerInitializer扫描)
+    AbstractAnnotationConfigDispatcherServletInitializer是WebApplicationInitializer的抽象实现类
+
+    在servlet上下文中添加servlet或监听器或过滤器:
+        可以通过实现WebApplicationInitializer接口,实现onStartup()方法,使用方法的参数ServletContext来添加.

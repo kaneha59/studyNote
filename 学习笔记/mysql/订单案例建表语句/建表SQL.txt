@@ -1,0 +1,12 @@
+DROP TABLE users, orders;
+
+CREATE TABLE users (
+	id int PRIMARY KEY AUTO_INCREMENT,
+	username char(30)
+);
+
+CREATE TABLE orders (
+	oid int PRIMARY KEY COMMENT '订单主键',
+	uid int NOT NULL COMMENT '用户id',
+	FOREIGN KEY(uid) REFERENCES users(id)
+);

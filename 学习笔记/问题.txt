@@ -1,0 +1,23 @@
+﻿
+
+
+让input标签不能点击
+	加css事件(点击不触发事件)
+	$("#evtMrgCod_Are").css("pointer-events" , "none")
+	修改属性(失效)
+	$("#evtMrgCod_Are").attr("disabled" , "disabled");
+	
+fmt标签的使用方法
+	<fmt:formatDate value="${lmmmevtm.updymdhms }" pattern="yyyy-MM-dd HH:mm"/>
+	
+动态包含和静态包含
+	静态包含:吧被包含的代码引入jsp页面
+		<%@ include file="/common/messages.jsp"%>
+	动态包含:把被包含页面的结果,引入到jsp页面上
+		<jsp:include page="header.jsp" flush="true"/>
+		
+	区别:动态包含的内容只能读取,不能修改.
+	
+判断全角的正则表达式
+	/[^\x00-\xff|\uff61-\uff9f]/.test(evtMrgCod_Are)
+	如果匹配为true,则为全角.

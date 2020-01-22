@@ -1,0 +1,27 @@
+两种方法
+
+1.使用@ServletComponentScan和@WebFilter
+    @WebFilter: 添加到过滤器类上,可配置过滤url
+    @ServletComponentScan: 添加到启动类上(就是标有@SpringBootApplication的那个类)
+    启动类会扫描到过滤器并启用.
+
+2.通过FilterRegistrationBean注册Filter
+    在配置类中使用@Bean注册一个FilterRegistrationBean的bean即可
+    FilterRegistrationBean registration = new FilterRegistrationBean();
+
+3.使用@Bean直接注册一个Filter实例
+    public Filter filter (){......}
+
+总结:
+    第二种方法:
+        因为FilterRegistrationBean间接实现了ServletContextInitializer,
+        而springboot在启动容器后会查找实现该接口的bean,并调用onStartup()方法添加自定义的Filter
+    第三种方法:
+        直接注册Filter的bean无法设定过滤url,默认是全局过滤,慎用
+
+问题:
+    ServletContextInitializer和WebApplicationInitializer有什么区别?
+
+怎么写过滤器类?
+    实现Filter接口,重写3个方法即可!
+    

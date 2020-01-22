@@ -1,0 +1,6 @@
+
+${info}
+    取值
+%{user.username}
+    如果user为null,则会报错500
+    解决办法: %{user?.username},在可能为空的属性上加?防止空指针异常

@@ -1,0 +1,31 @@
+1. 关闭mysql自动commit
+	SET AUTOCOMMIT=off;
+
+2. 启动mysql
+	systemctl start mysqld.service
+
+3. 关闭mysql
+	systemctl stop mysqld.service
+
+4. 重启mysql
+	systemctl restart mysqld.service
+
+5. 开机自启
+	systemctl enable mysqld.service
+
+6. 允许远程登陆mysql
+	use mysql;  // 使用'mysql'数据库
+	update user set host='%' where user='root';    // 使root账户可以从任意ip访问
+	GRANT ALL PRIVILEGES ON *.* TO 'root'@'%'WITH GRANT OPTION;		//这样就可以远程连接了
+
+	update user set plugin='mysql_native_password' where user='root';	// 修改密码加密方式,然后就可以使用navicat来访问数据库了
+		mysql: 一个数据库,存放用户信息表(user)等等
+			user表: user:用户名
+					plugin: 加密方式
+					host: 可用连接ip,%表示该用户所有ip都可以连接
+		如果还不能远程连接的话:
+			1. 查看linux中firewall是否放开3306端口
+			2. 修改配置后是否重启firewall使配置生效
+
+
+			

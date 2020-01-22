@@ -1,0 +1,5 @@
+在MVC的配置类中注册:
+    覆盖WebMvcConfigurer的addInterceptors(InterceptorRegistry registry)方法,用registry.addInterceptor添加到配置
+        示例:
+            registry.addInterceptor(LoginInterceptor()).addPathPatterns("/**");
+            registry.addInterceptor(AuthorityInterceptor()).addPathPatterns("/**");

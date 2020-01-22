@@ -1,0 +1,15 @@
+
+代码片段的使用!
+
+1.编写代码片段
+    <html xmlns:th="http://www.thymeleaf.org">
+    <div th:fragment="header">
+        我是头部
+    </div>
+
+    使用 th:fragment="xxx" 格式来设定代码片段
+
+2.引入代码片段
+    <div th:include="header::header"></div>
+
+    有th:include和th:replace两种引入方法,themeleaf3.0以后推荐使用th:include

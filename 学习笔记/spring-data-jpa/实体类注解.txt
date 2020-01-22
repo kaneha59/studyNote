@@ -1,0 +1,149 @@
+Spring data JPA 的实体类注解使用jakarta.persistence-api-x.x.x.jar定义的注解.
+
+@Entity -->被注解的Entity类会生成对应的表
+    String name() default ""; -->设置表名(如果@Table也设置了表名,则以@Table的name值为主)
+
+@Table  -->仅注解@Table并不会生成对应的表
+    String name() default "";   -->设置表名(优先度高于@Entity(name))
+    String catalog() default "";    -->指定数据库名
+    String schema() default ""; 作用不明
+    UniqueConstraint[] uniqueConstraints() default {};
+        @UniqueConstraint   -->因为@Target({}),所以只能作为一个属性,不能在其他位置上用(比如方法上,属性上)
+            String name() default "";   -->唯一约束的名
+            String[] columnNames(); -->指定唯一约束的字段
+    Index[] indexes() default {};   -->用于指定索引
+        @Index  -->@Target({})
+            String name() default "";   -->索引名
+            String columnList();    -->索引list,比如: indexes = @Index(columnList = "age, sex")
+            boolean unique() default false; -->指定索引是否是唯一索引
+
+@Id
+    没有属性
+
+@GeneratedValue
+    String generator() default ""; --> 对应主键生成器的名字
+    GenerationType strategy() default GenerationType.AUTO;  --> 主键生成策略,对应枚举类GenerationType的4个值
+        enum GenerationType:
+            TABLE: 
+            SEQUENCE: 通过数据库的序列产生主键, MYSQL  不支持
+            IDENTITY: 主键由数据库生成, 采用数据库自增长, Oracle不支持这种方式
+            AUTO: 主键由程序控制, 是默认选项
+
+@Column
+    String name() default "";   -->对应字段的名字
+    boolean unique() default false; -->字段是否唯一
+    boolean nullable() default true;    -->字段是否可为null值
+    boolean insertable() default true;  -->insert时是否插入该字段
+    boolean updatable() default true;   -->update时是否更新该字段
+    String columnDefinition() default "";   -->手动指定属性的定义语句,比如columnDefinition="varchar(128) not null"
+    String table() default "";  ***********************************
+    int length() default 255;   -->长度
+    int precision() default 0;  -->值为double类型时,数值的总长度
+    int scale() default 0;  -->值为double类型时,小数点所占的位数
+
+@Basic  -->标识为字段,作用和Column类似.对于没有任何注解的属性,会默认加上@Basic并生成对应的数据库字段
+    FetchType fetch() default FetchType.EAGER;  用途不明
+    boolean optional() default true;    -->是非可以为空值
+
+@Transient
+    没有属性,表示属性并非数据库表字段的映射,ORM框架将忽略该属性
+
+@Temporal   -->将java.util.Date对应数据库中的日期类型
+    TemporalType value();
+        enum TemporalType
+            DATE: 2008-08-08
+            TIME: 20:00:00
+            TIMESTAMP: 2008-08-08 20:00:00
+
+@Enumerated -->entity中枚举类属性即使不加@Enumerated,也可以正常插入数据,默认插入int值,按照枚举类里常量的声明顺序,从0开始计数.
+    EnumType value() default EnumType.ORDINAL;
+        enum EnumType
+            ORDINAL: 枚举使用int    -->插入枚举类中常量的index(按照常量的声明顺序,从0开始)
+            STRING: 枚举使用字符串  -->插入枚举类中的常量名(不是值,就是属性的名字)
+                注:如果要往数据库中插入枚举的值怎么办?
+                    实现AttributeConverter接口,自定义属性转换器.
+                        1.属性转换器: 类上要加上@Convertor注解,实现AttributeConverter的两个方法.(转换器类加上@Convertor后无需在spring注册)
+                        2.entity中: enum属性上不要再留着@Enumerated了,否则转换器类会失效,
+                                    enum属性上要用@Column和@Converte(converter = XXXConvertor.class)
+
+@Embeddable -->当一个实体类需要被多个实体类引用,但又不需要生成独立的数据库表时,在该实体类上添加@Embeddable
+    没有属性
+    使用方法:
+        1.在需要被引用的实体类上添加@Embeddable,该类中的属性上可以正常添加注解(@Column等)
+        2.在目标实体类中,添加引用实体类的属性,该属性上无需添加注解.
+    效果:
+        目标实体类生成对应表时,会把引用实体类中定义的字段添加进去,而引用实体类自身并不会生成独立的表
+
+@Embedded   -->作用同@Embeddable,但使用位置不同
+    没有属性
+    使用方法:
+        1.创建被引用实体类,该类上可以不加任何注解,也可以只在属性上添加注解(@Column等)
+        2.在目标实体类中的引用实体类*属性*上,添加@Embedded,即可在目标实体类对应的数据库表中加上引用实体类内定义的字段
+    注意:
+        @Embeddable和@Embedded可以同时使用!推荐同时使用.
+        即:在引用实体类的类声明上添加@Embeddable,同时在目标实体类中引用实体类的属性上添加@Embedded
+
+@OneToOne
+    Class targetEntity() default void.class;
+    CascadeType[] cascade() default {};
+        enum CascadeType
+            PERSIST:    -->级联持久化,持久化entity时,也会将此entity中持有的其他entity一并持久化(比如把user写入数据库,user中的address也将写入数据库)
+            MERGE:  -->级联合并(更新),更新entity时,也会一并更新entity中持有的其他entity对应的数据(比如update user时...)
+            REMOVE: -->级联删除,删除entity时,entity中持有的其他entity也会被连带删除(delete user时...)
+            REFRESH:    -->不知道
+            DETACH: -->不知道
+            ALL:    -->获得以上所有权限
+    FetchType fetch() default FetchType.EAGER;
+    boolean optional() default true;    -->指定在生成数据库结构时字段是否允许为 null.
+    String mappedBy() default "";   -->被维护方专用,使用该属性将标记自己为被维护方,值为维护方entity里的被维护方属性名
+    boolean orphanRemoval() default false;  -->不知道
+@OneToMany
+@ManyToOne
+@ManyToMany
+    (一对多,多对一,多对多)注解的属性和一对一类似,不赘述
+    ***关于多对多:
+        建立多对多关系时,应该:
+            1.防止建立两张中间表:
+                1.1)不要添加mappedBy属性,因为两张表都不维护对方,维护关系由中间表建立
+                1.2)两个表都写@JoinTable,并且两个entity的@JoinTable的name值要相等.joinColumns和inverseJoinColumns的值相反.
+            2.中间表维护字段有重复?
+                @JoinTable中,joinColumns和inverseJoinColumns的name和referencedColumnName都要填!缺一不可.
+
+@JoinColumn -->维护方专用,用于指定维护的字段,默认为被维护方的主键
+    String name() default "";   -->维护方维护的字段在维护方的名字(比如A表维护B表的id,如果将@joinColumn的name设定为iiid,则在A表中将B表的id显示为iiid)
+    String referencedColumnName() default "";   -->手动指定维护的字段(默认情况时维护附表的主键)
+    boolean unique() default false;
+    boolean nullable() default true;
+    boolean insertable() default true;
+    boolean updatable() default true;
+    String columnDefinition() default "";
+    String table() default "";
+    ForeignKey foreignKey() default @ForeignKey(ConstraintMode.PROVIDER_DEFAULT);
+
+@JoinTable  -->用于多对多,建立中间表(怎么防止建两张中间表?看上边关于多对多的内容)
+    String name() default "";   -->中间表的表名
+    String catalog() default "";
+    String schema() default "";
+    JoinColumn[] joinColumns() default {};  -->中间表维护的字段(当前entity对应表被维护的的字段)
+    JoinColumn[] inverseJoinColumns() default {};   -->中间表维护的字段(另一个entity对应表被维护的字段)
+    ForeignKey foreignKey() default @ForeignKey(ConstraintMode.PROVIDER_DEFAULT);
+    ForeignKey inverseForeignKey() default @ForeignKey(ConstraintMode.PROVIDER_DEFAULT);
+    UniqueConstraint[] uniqueConstraints() default {};
+    Index[] indexes() default {};
+
+@ElementCollection
+    Class targetClass() default void.class;
+    FetchType fetch() default FetchType.LAZY;
+
+@MappedSuperclass   --表示是BaseEntity.使用该注解时不能添加@Table或@Entity
+    没有属性
+    以下是baseEntity会涉及的注解,用于自动生成时间
+        自动注入时间:
+            @CreatedDate    --创建时间,标在属性上
+            @LastModifiedDate   --最近修改时间,标在属性上
+        使自动注入时间生效:
+            @EntityListeners(AuditingEntityListener.class)  --标在entity类上
+            @EnableJpaAuditing  --标在springboot启动器类上
+    
+https://www.jianshu.com/p/de122a0c3fd2
+https://www.cnblogs.com/pascall/p/10280825.html
