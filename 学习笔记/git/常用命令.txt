@@ -1,0 +1,17 @@
+pwd
+    显示当前所在目录
+mkdir 
+    创建目录
+    示例: $ mkdir newFile
+cd
+    进入目录
+git config
+    应该是用来进行git的配置
+git init
+    把当前所在目录变成git管理的仓库,(创建.git文件夹)
+git add <file>
+    把文件添加到仓库(需要commit才会生效)
+    示例: $ git add readme.txt
+git commit -m <message>
+    提交修改(必须要添加-m参数来添加改动说明)
+    示例: $ git commit -m "wrote a readme file"

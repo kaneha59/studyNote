@@ -1,0 +1,24 @@
+
+廖雪峰的git教程:https://www.liaoxuefeng.com/wiki/896043488029600/896827951938304
+
+1.安装
+    下载git后按照默认配置安装,打开git bash命令行工具
+2.配置用户名和邮箱
+    $ git config --global user.name "Your Name"
+    $ git config --global user.email "email@example.com"
+        分析:
+        git config: 是一个命令, 
+            --global参数表示是全局配置
+3.新建一个git仓库
+    使用cd命令进入想要创建为仓库的文件目录,
+    然后使用git init命令,将该目录变为仓库(会创建一个.git的隐藏文件夹)
+
+4.添加文件到git仓库
+    (在仓库目录下新建readme.txt文件)
+    $ git add readme.txt
+        把readme.txt添加到仓库
+    $ git commit -m "wrote a readme file"
+        提交修改(必须用-m添加修改说明)
+
+Tips:
+    1).版本控制系统只能跟踪文本文件的改动,比如txt, xml, java文件等等
