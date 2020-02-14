@@ -6,15 +6,15 @@ cat <file>: 显示该文件内容
 git config: 应该是用来进行git的配置
 git init:   把当前所在目录变成git管理的仓库,(创建.git文件夹)
 git add <file>: 把指定文件的改动添加到暂存区
-    git add .:      把当前目录即子目录的改动添加到暂存区
+    git add .:      把当前目录及子目录的改动添加到暂存区
     git add all:    把所有改动提交到暂存区
 git commit -m <message>:    提交修改(必须要添加-m参数来添加改动说明)
     示例: $ git commit -m "wrote a readme file"
 git status <file>:  展示当前仓库状态(比如哪些文件发生修改等等)
 
 git diff <file>:    工作区 ××× 暂存区
-    git diff HEAD <-- file>:    工作区 ××× 版本库
-    git diff --cached:  暂存区 ××× 版本库
+    git diff HEAD <-- file>:    工作区 ××× 仓库
+    git diff --cached:  暂存区 ××× 仓库
 
 git log <--参数>
     显示日志,按q退出日志界面
