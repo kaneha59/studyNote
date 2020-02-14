@@ -1,0 +1,68 @@
+一.创建,合并,删除分支
+    查看分支:   git branch
+    创建分支:   git branch <分支名>
+    删除分支:   git branch -d <分支名>
+    切换分支:   git switch <分支名>
+    创建并切换分支: git switch -c <分支名>
+    合并某分支到当前分支:   git merge <分支名>
+
+    什么是分支?
+    1.master是主分支,HEAD总是指向当前分支,每次commit,当前分支都会向前移动一步.
+                    HEAD
+                    master
+        ⚪--->⚪--->⚪
+    2.创建新的分支dev并把HEAD指向新分支dev后,再commit时,dev分支会向前移动一步.原来的master分支不变
+                    master
+        ⚪--->⚪--->⚪
+                    dev
+                    HEAD
+    3.合并分支
+        最简单的情况下,就是把原来的分支的指针master指向dev的当前提交,完成合并
+    4.删除分支
+        合并后删除dev分支,其实就是把dev指针删掉而已.
+
+
+二.分支冲突
+    1. 当两条分支同时对同一文件同一行进行修改时,会发生分支冲突,导致无法merge.
+    2. 此时执行merge命令时,git会告知你产生冲突,无法合并,并在原文件中标记处冲突的内容.
+    3. 此时要打开冲突的文件,参考git的标记,手动修改文件解决冲突.
+    4. 最后手动add,commit解决冲突后的文件.(这样就完成merge了,无需再执行merge命令)
+
+    Tips:
+        1.git log --graph可以查看分支合并图
+
+三.分支管理策略
+    Fast forward模式:
+        直接使用git merge <分支名>时,默认使用Fast forward模式.
+        在Fast forward模式下,如果没有发生冲突,merge后log中不会有merge记录,
+        删除分支后,log中连分支的记录也都没了.(发生冲突的话会留有记录)
+        为了留下merge记录,可以添加--no-ff参数,禁用Fast forward模式
+    git merge --no-ff <分支名>
+        禁用Fast forward模式的merge命令会在log中留下记录!
+
+四.隐藏分支
+    git stash: 隐藏当前分支的工作区中(相对于版本库)的改动(隐藏后可以使用git status查看是否隐藏)
+        git stash list: 查看被隐藏的工作现场
+        git stash pop: 恢复工作现场,并删除stash中的内容
+        git stash apply: 恢复工作现场,但不删除stash中的内容,需要使用git stash drop手动删除
+    git cherry-pick <commit_id>: 指定某次commit的内容合并到当前分支  (cherry-pick是摘樱桃?)
+
+    Tips: 未被追踪的文件不会被隐藏,所以在使用git stash命令前,首先把未被追踪的文件add到暂存区,再执行隐藏
+
+五.多人协作
+    git remote -v: 查看远程仓库的信息
+    推送分支到远程仓库
+        git push origin <分支名>: 把本地某分支推送给origin仓库(origin为远程仓库的默认名)
+    若远程版本和本地有冲突,则无法推送分支到远程仓库
+        使用git pull, 把远程分支抓取到本地,在本地合并解决冲突后,再push
+    若没有设定本地XXX分支和远程origin/xxx分支的连接,则会抓取失败
+        按照提示,git branch --set-upstream-to=origin/xxx xxx,连接远程和本地的xxx分支
+    成功抓取远程分支到本地,解决冲突后commit,push.推送分支到远程仓库成功.
+    git checkout -b <分支名> origin/<分支名>: 在本地创建远程中的分支
+
+六.rebase
+    抽空看
+    https://www.jianshu.com/p/f7ed3dd0d2d8
+    https://www.cnblogs.com/hujunzheng/p/9732936.html
+    
+    

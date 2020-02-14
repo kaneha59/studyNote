@@ -14,11 +14,27 @@
     然后使用git init命令,将该目录变为仓库(会创建一个.git的隐藏文件夹)
 
 4.添加文件到git仓库
-    (在仓库目录下新建readme.txt文件)
+    (先在仓库目录下新建readme.txt文件)
     $ git add readme.txt
         把readme.txt添加到仓库
     $ git commit -m "wrote a readme file"
         提交修改(必须用-m添加修改说明)
 
+5.查看仓库状态和查看文件对比
+    (先修改一个文件的文本然后执行下面两个命令)
+    git status <file>   (查看仓库状态,可以指定查看某文件的状态)
+    git diff <file>     (查看某文件的对比)
+
+6.版本回退
+    6.1)显示修改记录
+        git log     (显示日志记录,按q可退出日志界面)
+            git log --pretty=oneline    (每条日志只显示一行)
+    6.2)修改head指针指向的版本(即修改当前版本)
+        git reset --hard commit_id
+            示例: git reset --hard head^^ (切换到上上个提交的版本)
+                  git reset --hard e475afc (切换到指定commit id的版本, e475afc是commit id的一个值)
+    6.3)显示版本历史以及使用过的修改版本的命令
+        git reflog
 Tips:
     1).版本控制系统只能跟踪文本文件的改动,比如txt, xml, java文件等等
+    2).HEAD指针: head指针总是指向当前版本,修改版本时其实就是修改head指针的指向
