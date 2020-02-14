@@ -4,6 +4,9 @@ mkdir:  创建目录
 cd: 进入目录
 cat <file>: 显示该文件内容
 git config: 应该是用来进行git的配置
+    git config --list:  查看Git的所有配置
+    git config --global --unset <配置项>:   删除某个全局配置
+    git config --global --edit <配置项>:    编辑某项全局配置
 git init:   把当前所在目录变成git管理的仓库,(创建.git文件夹)
 git add <file>: 把指定文件的改动添加到暂存区
     git add .:      把当前目录及子目录的改动添加到暂存区
@@ -29,3 +32,5 @@ git checkout
     git checkout -- file:   未使用add缓存代码时,删除掉工作区中的改动(和缓存区保持一致,相当于把缓存区检出到工作区) 
     (*** git2.0以后的版本,使用git restore file 来放弃工作区的修改 ***)
 git rm <file>:  把指定文件从版本库中移除(记得commit)
+    git rm -r <file>:   要删除的文件夹不是空文件大的情况下,要加-r参数才能成功删除非空文件夹
+    git rm --cached <file>: 貌似是删除版本库中的文件,但工作区中的文件不删除.不确定,自己试一下
