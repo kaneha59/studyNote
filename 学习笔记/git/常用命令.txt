@@ -27,7 +27,10 @@ git commit: 提交暂存区的修改,这种方式会启动文本编辑器以便�
     git commit -m <message>:    在 commit 命令后添加 -m 选项，将提交信息与命令放在同一行
         示例: $ git commit -m "wrote a readme file"
     git commit -a:  跳过使用暂存区,直接把工作目录中的改动提交(谨慎使用,可能会将不需要的文件添加到提交中)
-    git commit --amend  1
+    git commit --amend: 对上次commit进行*重新提交*(类似于打补丁)
+        比如: 提交之后发现提交信息写错了而且少提交了一个文件,
+              可以使用amend来对上次提交径行修改,而无需重新再提交一次
+              (再查看log会发现只有一个commit记录,好像给之前的commit打补丁一样, 但commit_id会改变)
 
 git status <file>:  展示当前仓库状态(比如哪些文件发生修改等等)
     git status -s:  更简洁地展示状态信息(s是指short)
@@ -70,14 +73,15 @@ git log:    显示所有git日志(使用vim显示,vim相关操作参考linux笔�
             例子: git log -S "git" -1 ==>显示最近一条增删内容包含"git"字符串的提交
 
 git reset
-    git reset HEAD file:    放弃指定文件的缓存(相当于撤销add操作,工作区的改动并没有被撤销)
+    git reset HEAD <file>:    放弃指定文件的缓存(相当于撤销add操作,工作区的改动并没有被撤销)
     git reset --hard commit_id: 修改当前版本.commit_id可以填:commit_id或者head^,head^^,...head~100
 
 git reflog
     显示版本历史以及使用过的修改版本的命令,可以用这个命令获取之前使用过的命令,并从该命令中得到commit id
 
 git checkout
-    git checkout -- file:   未使用add缓存代码时,删除掉工作区中的改动(和缓存区保持一致,相当于把缓存区检出到工作区) 
+    git checkout -- file:   未使用add缓存代码时,删除掉工作区目录的改动(和缓存区保持一致,相当于把缓存区检出到工作区替换) 
+        例子: git checkout -- CONTRIBUTING.md
     (*** git2.0以后的版本,使用git restore file 来放弃工作区的修改 ***)
 
 git rm <file>:  把指定文件移除版本控制(!!!小心:工作目录下的文件也一并删除了!)(谨慎使用)
@@ -93,3 +97,9 @@ git mv <oldFileName> <newFileName>: 改名或移动文件.
         mv <oldFileName> <newFileName>
         git rm <oldFileName>
         git add <newFileName>
+
+git remote: 显示远程服务器的简写
+    git remote -v: 显示需要读写远程仓库使用的 Git 保存的简写与其对应的 URL
+    git remote rename <oldName> <newName>: 重命名远程仓库的简写名(shortName)
+    git remote rm <shortName>: 移除一个远程仓库
+    git remote add <shortName> <url>: 添加一个远程仓库.添加后就可以使用shortName来代替url了
