@@ -26,6 +26,7 @@ git commit: 提交暂存的修改,这种方式会启动文本编辑器以便输�
     git commit -v:  弹出的文本在git commit的基础上,显示更详细的改动内容
     git commit -m <message>:    在 commit 命令后添加 -m 选项，将提交信息与命令放在同一行
         示例: $ git commit -m "wrote a readme file"
+    git commit -a:  跳过使用暂存区,直接把工作目录中的改动提交(谨慎使用,可能会将不需要的文件添加到提交中)
 
 git status <file>:  展示当前仓库状态(比如哪些文件发生修改等等)
     git status -s:  更简洁地展示状态信息(s是指short)
