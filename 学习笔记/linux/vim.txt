@@ -27,3 +27,14 @@
     dd: 删除本行   [n]k  ==> 从本行开始删除n行,例如5k
 
 
+不确定是什么命令模式(git bash用,还没再linux上确认):
+    整页翻页:
+        ctrl + f: forward
+        ctrl + b: back
+    翻半页:
+        ctrl + d: down
+        ctrl + u: up
+    滚一行:
+        ctrl + e: 
+        ctrl + y:
+    

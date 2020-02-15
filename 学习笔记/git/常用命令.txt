@@ -36,10 +36,38 @@ git diff <file>:    工作区 ××× 暂存区  ==>即,显示尚未暂存的改�
     git diff --cached:  暂存区 ××× 仓库  ==>即,显示暂存未提交的改动
     git diff --staged:  同上
 
-git log <--参数>
-    显示日志,按q退出日志界面
-        参数:
-            --pretty=oneline    (每条记录仅显示一行)
+git log:    显示所有git日志(使用vim显示,vim相关操作参考linux笔记,比如翻页)
+    常用参数:
+        git log -p: 详细显示每次提交的改动内容
+        git log --stat: 日志中显示简略统计信息(相比于-p,只显示+-号这种)
+        git log --pretty=<参数值>:  按照某些格式或自定义格式输出log(常用格式占位符见"格式占位符参考.txt")
+            参数值:
+                oneline: 每次commit的日志只显示一行
+                short/full/fuller: 如字面意思,感觉不太常用
+                format: 使用格式占位符自定义log输出格式
+                    eg: git log --pretty=format:"%h--%an--%cd--%s" -5
+                        以 提交的简写哈希--作者--提交日期--提交说明 的格式输出最近5条log
+        git log --graph: 在日志旁以 ASCII 图形显示分支与合并历史
+        git log --relative-date: 使用较短的相对时间而不是完整格式显示日期（比如，“2 weeks ago”）
+            例子: git log relative-date -5 ==>用相对时间显示最近5条commit
+        其他log参数:
+            --shortstat: 只显示 --stat 中最后的行数修改添加移除统计
+            --name-only: 仅在提交信息后显示已修改的文件清单
+            --name-status: 显示新增、修改、删除的文件清单
+            --abbrev-commit: "SHA-1校验和" 仅显示所有 40 个字符中的前7个字符
+    限制输出的参数:
+        git log -<n>: 显示指定条目数的log
+            例子:   git log -p -2  ==> 详细显示最近2次提交的log
+        git log --since/after: 仅显示指定时间之后的提交,(具体格式自己试,支持多种日期格式)
+            例子: git log --since=2020.2.1 ==>显示2020年2月1日之后的commit
+        git log --until/before: 仅显示指定时间之前的提交
+        git log --author: 匹配作者,用法同下
+        git log --committer: 匹配提交者,用法同下
+        git log --grep: 仅显示提交说明中包含指定字符串的提交
+            例子: git log --grep "1" ==>显示提交说明中包含1的提交
+        git log -S "匹配字符串": 仅显示修改内容中添加或删除匹配字符串的提交
+            例子: git log -S "git" -1 ==>显示最近一条增删内容包含"git"字符串的提交
+
 git reset
     git reset HEAD file:    放弃指定文件的缓存(相当于撤销add操作,工作区的改动并没有被撤销)
     git reset --hard commit_id: 修改当前版本.commit_id可以填:commit_id或者head^,head^^,...head~100
