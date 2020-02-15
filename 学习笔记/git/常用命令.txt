@@ -103,3 +103,7 @@ git remote: 显示远程服务器的简写
     git remote rename <oldName> <newName>: 重命名远程仓库的简写名(shortName)
     git remote rm <shortName>: 移除一个远程仓库
     git remote add <shortName> <url>: 添加一个远程仓库.添加后就可以使用shortName来代替url了
+
+git fetch:
+
+git pull:
