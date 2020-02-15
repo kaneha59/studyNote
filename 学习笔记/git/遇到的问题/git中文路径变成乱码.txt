@@ -1,0 +1,34 @@
+添加一个全局变量即可
+    git config --global core.quotepath false
+        执行完这个命令，git就不会对路径进行转换，显示原来完整的中文路径。
+(使用git config --list 来查看所有的配置属性)
+
+
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   "\345\255\246\344\271\240\347\254\224\350\256\260/git/\345\270\270\347\224\250\345\221\275\344\273\244.txt"
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+效果对比
+↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   学习笔记/git/常用命令.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        学习笔记/git/遇到的问题/

@@ -22,8 +22,10 @@ git add <file>: 把指定文件的改动添加到暂存区
     git add .:      把当前目录及子目录的改动添加到暂存区
     git add all:    把所有改动提交到暂存区
 
-git commit -m <message>:    提交修改(必须要添加-m参数来添加改动说明)
-    示例: $ git commit -m "wrote a readme file"
+git commit: 提交暂存的修改,这种方式会启动文本编辑器以便输入本次提交说明(我的默认使用vsc)
+    git commit -v:  弹出的文本在git commit的基础上,显示更详细的改动内容
+    git commit -m <message>:    在 commit 命令后添加 -m 选项，将提交信息与命令放在同一行
+        示例: $ git commit -m "wrote a readme file"
 
 git status <file>:  展示当前仓库状态(比如哪些文件发生修改等等)
     git status -s:  更简洁地展示状态信息(s是指short)
