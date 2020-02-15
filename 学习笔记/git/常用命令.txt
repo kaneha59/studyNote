@@ -2,24 +2,36 @@ pwd:    显示当前所在目录
 mkdir:  创建目录
     示例: $ mkdir newFile
 cd: 进入目录
+
 cat <file>: 显示该文件内容
-git clone <url> [新文件夹名]:   使用URL克隆远程仓库到本地
+
+git clone <url> [新文件夹名]:   使用URL克隆远程仓库到本地,可以修改项目文件夹名
+
 git config: 应该是用来进行git的配置
     git config --list:  查看Git的所有配置
     git config --global --unset <配置项>:   删除某个全局配置
     git config --global --edit <配置项>:    编辑某项全局配置
+
 git init:   把当前所在目录变成git管理的仓库,
             (在当前目录下创建.git文件夹,且当前目录内的文件并未被追踪,需要手动add)
+
 git add <file>: 把指定文件的改动添加到暂存区
+        ***这是个多功能命令：可以用它开始跟踪新文件，或者把已跟踪的文件放到暂存区，
+        ***还能用于合并时把有冲突的文件标记为已解决状态等。 
+        ***将这个命令理解为“添加内容到下一次提交中”而不是“将一个文件添加到项目中”要更加合适。
     git add .:      把当前目录及子目录的改动添加到暂存区
     git add all:    把所有改动提交到暂存区
+
 git commit -m <message>:    提交修改(必须要添加-m参数来添加改动说明)
     示例: $ git commit -m "wrote a readme file"
-git status <file>:  展示当前仓库状态(比如哪些文件发生修改等等)
 
-git diff <file>:    工作区 ××× 暂存区
+git status <file>:  展示当前仓库状态(比如哪些文件发生修改等等)
+    git status -s:  更简洁地展示状态信息(s是指short)
+
+git diff <file>:    工作区 ××× 暂存区  ==>即,显示尚未暂存的改动
     git diff HEAD <-- file>:    工作区 ××× 仓库
-    git diff --cached:  暂存区 ××× 仓库
+    git diff --cached:  暂存区 ××× 仓库  ==>即,显示暂存未提交的改动
+    git diff --staged:  同上
 
 git log <--参数>
     显示日志,按q退出日志界面
@@ -28,11 +40,14 @@ git log <--参数>
 git reset
     git reset HEAD file:    放弃指定文件的缓存(相当于撤销add操作,工作区的改动并没有被撤销)
     git reset --hard commit_id: 修改当前版本.commit_id可以填:commit_id或者head^,head^^,...head~100
+
 git reflog
     显示版本历史以及使用过的修改版本的命令,可以用这个命令获取之前使用过的命令,并从该命令中得到commit id
+
 git checkout
     git checkout -- file:   未使用add缓存代码时,删除掉工作区中的改动(和缓存区保持一致,相当于把缓存区检出到工作区) 
     (*** git2.0以后的版本,使用git restore file 来放弃工作区的修改 ***)
+
 git rm <file>:  把指定文件从版本库中移除(记得commit)
     git rm -r <file>:   要删除的文件夹不是空文件大的情况下,要加-r参数才能成功删除非空文件夹
     git rm --cached <file>: 貌似是删除版本库中的文件,但工作区中的文件不删除.不确定,自己试一下
