@@ -1,10 +1,23 @@
 git fetch:
-    是将远程主机的最新内容拉到本地，用户在检查了以后决定是否合并到工作本机分支中
+    将本地没有的数据从远程仓库中抓取到本地，用户在查看以后决定是否合并(merge)到工作本机分支中
 git pull:
     将远程主机的最新内容拉下来后直接合并,即：git pull = git fetch + git merge.
     这样可能会产生冲突，需要手动解决
 
 
-git fetch <远程主机名> [分支名] 抓取远程仓库的数据,可指定抓取全部分支或指定某个分支
-    
-    抓取后返回一个FETCH_HEAD,指
+git fetch <远程主机名> [分支名] 抓取远程仓库中本地没有的数据,可指定抓取全部分支或指定某个分支
+    如果本地版本比远程仓库版本更新(远程仓库有的本地都有),那么不会抓取任何数据
+    成功抓取后返回一个FETCH_HEAD,在.git/FETCH_HEAD中,
+    用于保存从远程仓库抓取的最新commit的SHA-1校验和.可以自己打开查看
+        像这样:
+            654333b9d0a2db60733b6f37ac288bea4de5e5b3		branch 'master' of https://github.com/kaneha59/studyNote
+    使用git log -p FETCH_HEAD可以查看FETCH_HEAD中保存的远程仓库最新版commit的日志(log)
+    然后再使用git merge FETCH_HEAD或git merge <log查到的校验和>来合并数据
+
+    git log -p FETCH_HEAD
+        只有加了FETCH_HEAD才能查到远程仓库最新版commit的log,可以自己试试
+
+fetch的使用流程:
+    1.get fetch命令从远程仓库抓取本地没有的数据(远程版本更旧则不抓取,表现为执行fetch命令后没有任何log显示)
+    2.使用git log -p FETCH_HEAD可以查看远程仓库最新commit所做的改动,然后决定是否合并
+    3.使用git merge FETCH_HEAD或git merge <远程仓库commitId> 手动合并数据
