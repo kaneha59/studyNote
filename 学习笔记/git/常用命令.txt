@@ -12,7 +12,8 @@ git config: 应该是用来进行git的配置
     git config --list:  查看Git的所有配置
     git config --global --unset <配置项>:   删除某个全局配置
     git config --global --edit <配置项>:    编辑某项全局配置
-
+    git config --global alias.<别名> '命令句段':    给命令起别名,可以是一个命令关键字或半句命令
+        详细可以看[git起别名.txt]
 git init:   把当前所在目录变成git管理的仓库,
             (在当前目录下创建.git文件夹,且当前目录内的文件并未被追踪,需要手动add)
 
@@ -55,6 +56,7 @@ git log:    显示所有git日志(使用vim显示,vim相关操作参考linux笔�
         git log --graph: 在日志旁以 ASCII 图形显示分支与合并历史
         git log --relative-date: 使用较短的相对时间而不是完整格式显示日期（比如，“2 weeks ago”）
             例子: git log relative-date -5 ==>用相对时间显示最近5条commit
+        git log --oneline: 和--pretty=oneline的区别是,提交校验和只显示7位,而不是完整的40位
         其他log参数:
             --shortstat: 只显示 --stat 中最后的行数修改添加移除统计
             --name-only: 仅在提交信息后显示已修改的文件清单
@@ -74,7 +76,7 @@ git log:    显示所有git日志(使用vim显示,vim相关操作参考linux笔�
             例子: git log -S "git" -1 ==>显示最近一条增删内容包含"git"字符串的提交
 
 git reset
-    git reset HEAD <file>:    放弃指定文件的缓存(相当于撤销add操作,工作区的改动并没有被撤销)
+    git reset HEAD -- <file>:    放弃指定文件的缓存(相当于撤销add操作,工作区的改动并没有被撤销)
     git reset --hard commit_id: 修改当前版本.commit_id可以填:commit_id或者head^,head^^,...head~100
 
 git reflog
@@ -84,6 +86,8 @@ git checkout
     git checkout -- file:   未使用add缓存代码时,删除掉工作区目录的改动(和缓存区保持一致,相当于把缓存区检出到工作区替换) 
         例子: git checkout -- CONTRIBUTING.md
     (*** git2.0以后的版本,使用git restore file 来放弃工作区的修改 ***)
+    git checkout <tagname>: 检出标签所指向的文件版本(***会导致'分离头指针'***)
+    git checkout -b <分支名> <tagname>: 把标签指向的版本检出到新的分支
 
 git rm <file>:  把指定文件移除版本控制(!!!小心:工作目录下的文件也一并删除了!)(谨慎使用)
     示例: git rm log/\*.log 删除 log/ 目录下扩展名为 .log 的所有文件(反斜杠转义)
@@ -121,7 +125,8 @@ git tag: 列出已有的标签
         ***在最后边加上校验和,可以给指定的提交打标签***
     git tag -l [glob匹配模式]: 以glob匹配模式列出匹配的tag(参数是L,不是1)
     git tag -d <标签名>: 删除本地的标签(远程仓库的标签必须用push命令来删除)
-    
+    ***检出标签(用checkout)会导致仓库处于"分离头指针(detacthed HEAD)"状态***
+    ***详细内容查看分离头指针!.txt***
 
 git show <想查看的东西>: 查看详细信息
     想查看的东西:
