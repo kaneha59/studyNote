@@ -57,6 +57,7 @@ git log:    显示所有git日志(使用vim显示,vim相关操作参考linux笔�
         git log --relative-date: 使用较短的相对时间而不是完整格式显示日期（比如，“2 weeks ago”）
             例子: git log relative-date -5 ==>用相对时间显示最近5条commit
         git log --oneline: 和--pretty=oneline的区别是,提交校验和只显示7位,而不是完整的40位
+        git log --decorate: 查看各个分支当前所指的对象
         其他log参数:
             --shortstat: 只显示 --stat 中最后的行数修改添加移除统计
             --name-only: 仅在提交信息后显示已修改的文件清单
@@ -88,6 +89,8 @@ git checkout
     (*** git2.0以后的版本,使用git restore file 来放弃工作区的修改 ***)
     git checkout <tagname>: 检出标签所指向的文件版本(***会导致'分离头指针'***)
     git checkout -b <分支名> <tagname>: 把标签指向的版本检出到新的分支
+    git checkout <分支名>: 切换分支
+    git checkout -b <分支名>: 创建并切换分支
 
 git rm <file>:  把指定文件移除版本控制(!!!小心:工作目录下的文件也一并删除了!)(谨慎使用)
     示例: git rm log/\*.log 删除 log/ 目录下扩展名为 .log 的所有文件(反斜杠转义)
@@ -102,6 +105,7 @@ git mv <oldFileName> <newFileName>: 改名或移动文件.
         mv <oldFileName> <newFileName>
         git rm <oldFileName>
         git add <newFileName>
+    问题: 会影响到log吗?
 
 git remote: 显示远程服务器的简写
     git remote -v: 显示需要读写远程仓库使用的 Git 保存的简写与其对应的 URL
@@ -133,3 +137,19 @@ git show <想查看的东西>: 查看详细信息
         标签名: 查看标签的标签信息和对应的提交信息
         FETCH_HEAD: 查看FETCH_HEAD对应的提交信息
         提交校验和: 查看对应的提交信息
+
+git switch <分支名>: 切换分支
+    git switch -c <分支名>: 创建并切换分支
+
+git branch: 查看分支
+    git branch <分支名>: 新建分支
+    git branch -d <分支名>: 删除分支
+    git branch -v: 查看每个分支的最新提交.
+    git branch --merged: 查看已经合并过的分支
+    git branch --no-merged: 查看尚未合并的分支
+
+git merge <分支名>: 合并分支到当前分支
+
+git mergetool: 启用图形化编辑工具
+
+git ls-remote [remote]: 远程引用的完整列表?
