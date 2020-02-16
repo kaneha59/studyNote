@@ -112,3 +112,14 @@ git pull [远程主机名] [分支名]:
 
 git push <remote-name> [branch-name]: 推送到远程仓库,
 
+git tag: 列出已有的标签
+    git tag -a <版本号> -m <"tag信息">: 创建附注标签(附注标签包含日期,作者,标签信息等,比轻量标签更全面)
+    git tag -l [glob匹配模式]: 以glob匹配模式列出匹配的tag(参数是L,不是1)
+        通过版本号查看对应的提交信息和标签信息
+            git show <版本号>
+
+git show <想查看的东西>: 查看详细信息
+    想查看的东西:
+        版本号: 查看标签的标签信息和对应的提交信息
+        FETCH_HEAD: 查看FETCH_HEAD对应的提交信息
+        提交校验和: 查看对应的提交信息
