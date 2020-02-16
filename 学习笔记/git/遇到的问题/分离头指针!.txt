@@ -1,0 +1,5 @@
+https://www.jianshu.com/p/91a0f8feb45d
+
+分离头指针(detached HEAD)
+
+分支的指针和HEAD指针的绑定状态被打破,变成了分离头指针状态
