@@ -170,3 +170,7 @@ git rebase <基底分支>: 为当前分支基于基底分支执行变基
     git rebase --abort: 中止此次rebase
     git rebase --continue: 解决完冲突并添加至缓存后(add),执行此命令执行变基.(不需要手动commit)
 
+
+
+
+分离头指针下的提交会丢失吗?
