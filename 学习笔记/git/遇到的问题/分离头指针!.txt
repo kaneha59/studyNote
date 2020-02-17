@@ -3,3 +3,22 @@ https://www.jianshu.com/p/91a0f8feb45d
 分离头指针(detached HEAD)
 
 分支的指针和HEAD指针的绑定状态被打破,变成了分离头指针状态
+
+图示:
+    分离头指针前:
+                            HEAD
+                            master
+        C0  <----  C1  <----  C2
+
+    检出旧版本导致头指针分离: (git checkout C1)
+                  HEAD      master
+        C0  <----  C1  <----  C2
+
+    分离头指针后现状分析:
+        1.此时当前分支为HEAD,而不再是master
+        2.如果在HEAD分支提交过,再切换回master,则之前的提交将会丢失!
+            (因为HEAD又指向master了,之前的提交和master是分叉关系,
+                查看master的log查不到该提交,且没有分支指向该提交,该提交也没有子提交)
+
+避免出现分离头指针:
+    使用 git checkout -b <分支名> <commit_id>: 检出旧版本时为旧版本创建新分支即可避免
