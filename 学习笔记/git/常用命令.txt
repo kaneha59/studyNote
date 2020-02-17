@@ -93,6 +93,8 @@ git checkout
     git checkout -b <分支名>: 创建并切换分支
     git checkout -b <分支名> <远程仓库简称>/<远端分支名>: 把远端分支检出到本地新建的分支(并自动跟踪分支)
     git checkout  --track <remotename>/<branch>: 将指定远程分支检出到当前分支(开始跟踪)
+    git checkout <commit_id>: 检出指定提交的快照(!!!会导致头指针分离)
+    git checkout -b <新分支名> <commit_id>: 将旧版本检出为一个新的分支(避免分离头指针)
 
 git rm <file>:  把指定文件移除版本控制(!!!小心:工作目录下的文件也一并删除了!)(谨慎使用)
     示例: git rm log/\*.log 删除 log/ 目录下扩展名为 .log 的所有文件(反斜杠转义)

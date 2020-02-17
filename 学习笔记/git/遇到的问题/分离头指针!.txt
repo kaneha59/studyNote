@@ -1,4 +1,4 @@
-https://www.jianshu.com/p/91a0f8feb45d
+
 
 分离头指针(detached HEAD)
 
