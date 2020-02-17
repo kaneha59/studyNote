@@ -120,6 +120,7 @@ git fetch [远程主机名] [分支名]:
     git fetch --all: 抓取所有远程仓库
 
 git pull [远程主机名] [分支名]:
+    git pull --rebase: 拉取时使用变基而不是快进或三方合并
 
 git push <remote-name> [branch-name]: 推送到远程仓库
     git push <remote-name> <tagname>: 推送标签到远程仓库(默认push命令不会推送标签到远程仓库)
@@ -164,5 +165,8 @@ git mergetool: 启用图形化编辑工具
 
 git ls-remote [remote]: 远程引用的完整提交列表
 
-git rebase <基底分支>: mastertestbranch113321333
+git rebase <基底分支>: 为当前分支基于基底分支执行变基
+    git rebase --skip: 抛弃当前分支的commit,采用基底的commit(慎用!会丢失当前分支的数据)
+    git rebase --abort: 中止此次rebase
+    git rebase --continue: 解决完冲突并添加至缓存后(add),执行此命令执行变基.(不需要手动commit)
 
