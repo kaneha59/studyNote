@@ -91,6 +91,8 @@ git checkout
     git checkout -b <分支名> <tagname>: 把标签指向的版本检出到新的分支
     git checkout <分支名>: 切换分支
     git checkout -b <分支名>: 创建并切换分支
+    git checkout -b <分支名> <远程仓库简称>/<远端分支名>: 把远端分支检出到本地新建的分支(并自动跟踪分支)
+    git checkout  --track <remotename>/<branch>: 将指定远程分支检出到当前分支(开始跟踪)
 
 git rm <file>:  把指定文件移除版本控制(!!!小心:工作目录下的文件也一并删除了!)(谨慎使用)
     示例: git rm log/\*.log 删除 log/ 目录下扩展名为 .log 的所有文件(反斜杠转义)
@@ -115,6 +117,7 @@ git remote: 显示远程服务器的简写
     git remote show [remote-name]: 显示远程仓库的详细信息,例如本地分支和远程分支的连接关系等等
 
 git fetch [远程主机名] [分支名]:
+    git fetch --all: 抓取所有远程仓库
 
 git pull [远程主机名] [分支名]:
 
@@ -122,6 +125,9 @@ git push <remote-name> [branch-name]: 推送到远程仓库
     git push <remote-name> <tagname>: 推送标签到远程仓库(默认push命令不会推送标签到远程仓库)
     git push <remote-name> --tags: 把所有不在远程仓库的标签推送过去
     git push <remote-name> :refs/tags/<tagname>: 从远程仓库删除指定标签(<tagname>是本地已被删除的标签名)
+    git push <remote-name> <branch>: 推送本地分支到远程服务器
+    git push <remote-name> <branch>:<自定义branch名>: 推送本地分支到远端,并自定义远端分支的名字
+    git push <remote-name> --delete <branch>: 删除远程服务器上的某个分支
 
 git tag: 列出已有的标签
     git tag -a <标签名> -m <"tag信息"> [校验和]: 创建附注标签(附注标签包含日期,作者,标签信息等,比轻量标签更全面)
@@ -145,11 +151,17 @@ git branch: 查看分支
     git branch <分支名>: 新建分支
     git branch -d <分支名>: 删除分支
     git branch -v: 查看每个分支的最新提交.
+    git branch -vv: 查看分支更多信息(比如正在跟踪的上游分支,版本是否领先)
+        但是,此操作并没有连接远程服务器,所以对比的是从服务器上最后一次抓取的数据
     git branch --merged: 查看已经合并过的分支
     git branch --no-merged: 查看尚未合并的分支
+    git branch -u <remotename>/<branch>: 修改跟踪的上游分支
+    git branch  --set-upstream-to <remotename>/<branch>: 同上
 
 git merge <分支名>: 合并分支到当前分支
 
 git mergetool: 启用图形化编辑工具
 
-git ls-remote [remote]: 远程引用的完整列表?
+git ls-remote [remote]: 远程引用的完整提交列表
+
+git rebase <基底分支>
