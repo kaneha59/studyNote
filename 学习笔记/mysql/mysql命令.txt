@@ -2,16 +2,21 @@
 	SET AUTOCOMMIT=off;
 
 2. 启动mysql
-	systemctl start mysqld.service
+	Windows: net start mysql   (cmd命令行下)
+	Linux: systemctl start mysqld.service
 
 3. 关闭mysql
-	systemctl stop mysqld.service
+	Windows: net stop mysql   (cmd命令行下)
+	Linux: systemctl stop mysqld.service
 
 4. 重启mysql
-	systemctl restart mysqld.service
+	Linux: systemctl restart mysqld.service
 
 5. 开机自启
-	systemctl enable mysqld.service
+	Linux: systemctl enable mysqld.service
+
+cmd里登录mysql:
+	进入mysql的bin目录下,然后输入以下命令: mysql -u <用户名> -p
 
 6. 允许远程登陆mysql
 	use mysql;  // 使用'mysql'数据库
