@@ -1,0 +1,14 @@
+1.在本地仓库的目录下,执行 git remote add <shortName> <url> 来添加远程仓库.
+    例子: 
+        git remote add origin https://github.com/kaneha59/testGitRepository.git
+
+2.执行pull命令,抓取并合并远程仓库内容.
+
+如果发生异常:fatal: refusing to merge unrelated histories(拒绝合并不相关的历史)
+    可以在merge命令中加上--allow-unrelated-history参数,意思是允许不相关历史.
+        (pull实际上是fetch+merge,此异常发生在merge时,所以此时已经fetch过了)
+        git merge FETCH_HEAD --allow-unrelated-history
+    或者在执行pull命令时直接加上--allow-unrelated-history
+
+3.把合并后的仓库push到远程
+    git push origin master

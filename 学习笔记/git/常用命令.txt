@@ -29,6 +29,7 @@ git commit: 提交暂存区的修改,这种方式会启动文本编辑器以便�
     git commit -m <message>:    在 commit 命令后添加 -m 选项，将提交信息与命令放在同一行
         示例: $ git commit -m "wrote a readme file"
     git commit -a:  跳过使用暂存区,直接把工作目录中的改动提交(谨慎使用,可能会将不需要的文件添加到提交中)
+                    只会提交已经被追踪的文件,对未被追踪的文件无效
     git commit --amend: 对上次commit进行*重新提交*(类似于打补丁)
         比如: 提交之后发现提交信息写错了而且少提交了一个文件,
               可以使用amend来对上次提交径行修改,而无需重新再提交一次
