@@ -77,25 +77,26 @@ git log:    显示所有git日志(使用vim显示,vim相关操作参考linux笔�
         git log -S "匹配字符串": 仅显示修改内容中添加或删除匹配字符串的提交
             例子: git log -S "git" -1 ==>显示最近一条增删内容包含"git"字符串的提交
 
-git reset
-    git reset HEAD -- <file>:    放弃指定文件的缓存(相当于撤销add操作,工作区的改动并没有被撤销)
-    git reset --hard commit_id: 修改当前版本.commit_id可以填:commit_id或者head^,head^^,...head~100
+git reset: 顾名思义,重置.原理是将当前分支指针和HEAD指针移向指定版本
+    git reset <commit_id> --hard: 将 仓库,暂存区,工作目录 的内容全部重置为指定版本的内容 (commit_id可以填:commit_id或者head^,head^^,...head~100)
+    git reset <commit_id> [--mixed]: --mixed是默认参数,将仓库和暂存区重置为指定版本的内容,工作目录保持不变
+    git reset <commit_id> --soft: 仅把仓库设置为指定版本的内容,暂存区和工作目录保持不变
 
+    git reset HEAD -- <file>:    撤销指定文件的add操作
 git reflog
     显示版本历史以及使用过的修改版本的命令,可以用这个命令获取之前使用过的命令,并从该命令中得到commit id
 
-git checkout
-    git checkout -- file:   未使用add缓存代码时,删除掉工作区目录的改动(和缓存区保持一致,相当于把缓存区检出到工作区替换) 
-        例子: git checkout -- CONTRIBUTING.md
-    (*** git2.0以后的版本,使用git restore file 来放弃工作区的修改 ***)
-    git checkout <tagname>: 检出标签所指向的文件版本(***会导致'分离头指针'***)
-    git checkout -b <分支名> <tagname>: 把标签指向的版本检出到新的分支
-    git checkout <分支名>: 切换分支
-    git checkout -b <分支名>: 创建并切换分支
+git checkout: 检出,检出后 仓库,暂存区,工作目录 三者保持一致
+    git checkout -- file: 把指定未add的文件恢复成缓存区的版本
+        (*** git2.0以后的版本,使用git restore <file> 来放弃工作区的修改 ***)
+    git checkout <分支名>: 切换分支 (对应git switch <分支名>)
+    git checkout -b <分支名>: 创建并切换分支 (对应git switch -c <分支名>)
     git checkout -b <分支名> <远程仓库简称>/<远端分支名>: 把远端分支检出到本地新建的分支(并自动跟踪分支)
     git checkout  --track <remotename>/<branch>: 将指定远程分支检出到当前分支(开始跟踪)
     git checkout <commit_id>: 检出指定提交的快照(!!!会导致头指针分离)
     git checkout -b <新分支名> <commit_id>: 将旧版本检出为一个新的分支(避免分离头指针)
+    git checkout <tagname>: 检出标签所指向的文件版本(***会导致'分离头指针'***)
+    git checkout -b <分支名> <tagname>: 把标签指向的版本检出到新的分支
 
 git rm <file>:  把指定文件移除版本控制(!!!小心:工作目录下的文件也一并删除了!)(谨慎使用)
     示例: git rm log/\*.log 删除 log/ 目录下扩展名为 .log 的所有文件(反斜杠转义)
@@ -172,7 +173,7 @@ git ls-remote [remote]: 远程引用的完整提交列表
 git rebase <基底分支>: 为当前分支基于基底分支执行变基
     git rebase --skip: 抛弃当前分支的commit,采用基底的commit(慎用!会丢失当前分支的数据)
     git rebase --abort: 中止此次rebase
-    git rebase --continue: 解决完冲突并添加至缓存后(add),执行此命令执行变基.(不需要手动commit)
+    git rebase --continue: 解决完冲突并添加至缓存后(add),执行此命令执行变基.(不要手动commit)
 
 
 分离头指针下的提交会丢失吗?

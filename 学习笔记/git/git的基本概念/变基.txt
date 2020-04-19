@@ -1,5 +1,8 @@
 对于分叉的分支,除了三方合并,还可以使用变基.
 
+什么是变基:
+    对于两个分叉的分支,把当前分支的祖先修改为基底分支
+
 变基的原理:
     1.找到分叉的2个分支的最近共同祖先
     2.对比当前分支相对于该祖先的历次提交,提取相应的修改并保存为临时文件
@@ -35,6 +38,11 @@
         git add .
         git rebase --continue
     流程和三方合并中处理冲突不一样,三方合并时是处理完冲突后直接add接commit
+
+git rebase <基底分支>: 为当前分支基于基底分支执行变基
+    git rebase --skip: 抛弃当前分支的commit,采用基底的commit(慎用!会丢失当前分支的数据)
+    git rebase --abort: 中止此次rebase
+    git rebase --continue: 解决完冲突并添加至缓存后(add),执行此命令执行变基.(不要手动commit)
 
 拉取时使用变基:
     git pull --rebase
