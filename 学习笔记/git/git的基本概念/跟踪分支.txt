@@ -8,8 +8,8 @@
         git checkout --track <remotename>/<branch>: 将指定远程分支检出到当前分支(开始跟踪)
 
     修改跟踪的上游分支:
-        git branch -u <remotename>/<branch>: 修改跟踪的上游分支
-        git branch  --set-upstream-to <remotename>/<branch>: 同上
+        git branch -u <remotename>/<branch>: 设置默认的跟踪分支
+        git branch  --set-upstream-to <remotename>/<branch>: 跟踪远程某个分支(同时存在多个远程仓库时使用)
 
 2.在跟踪分支上输入git pull, Git能自动识别去哪个服务器上抓取,合并到哪个分支
 
