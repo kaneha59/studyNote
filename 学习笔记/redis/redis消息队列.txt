@@ -1,0 +1,36 @@
+redis的列表类型天生支持用作消息队列.
+    任何时候都可以消费,一条消息只能消费一次
+    原理: 1. redis的列表是链表,链表两端的增删效率极高.
+          2. 通过push命令将数据插入链表两端.
+          3.通过pop命令从链表两端弹出数据.(pop操作会将一条数据从链表中移除)
+
+redis中的列表操作命令:
+    lpush <key> <value1> [value2...]
+        往链表左端push一个元素
+    rpush <key> <value1> [value2...]
+        往链表右端push一个元素
+    lpop <key>
+        从链表左端弹出一个元素
+    rpop <key>
+        从链表右端弹出一个元素
+    lrange <key> <start> <stop>
+        从左边开始获取指定范围内的元素,例如: lrange list 0 -1 ==> 获取全部元素
+        注意: 没有rrange命令
+    blpop <key1> [key2...] <timeout>
+    brpop <key1> [key2...] <timeout>
+        这两个一起讲: 
+            *blpop和brpop可以实现'阻塞读取'(重要)和'分优先级任务队列'*
+            若列表中有元素:
+                弹出并返回一个元素
+            若列表中没有元素:
+                进入阻塞状态, 直到等待超时或发现可弹出元素为止(timeout设置为0则不限时阻塞)
+            若指定多个列表(key):
+                可以实现区分优先级的任务队列.
+                按照key的顺序,一次弹出一个元素.即,上一个key的元素全部弹出完毕时,才会弹出下一个key的元素
+                    (key1的元素弹出完毕时,再执行命令时应该弹出key2的元素,若此时给key1添加了1个元素,则继续弹出key1刚添加的元素)
+
+在java中怎么操作:
+    使用 redis连接对象 调用blpop,brpop等命令对应的方法即可.
+参考文章:
+    https://www.cnblogs.com/qlqwjy/p/9763754.html
+        

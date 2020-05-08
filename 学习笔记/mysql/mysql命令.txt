@@ -32,5 +32,8 @@ cmd里登录mysql:
 			1. 查看linux中firewall是否放开3306端口
 			2. 修改配置后是否重启firewall使配置生效
 
+创建数据库:
+	CREATE DATABASE <库名>;
+
 
 			

@@ -1,0 +1,14 @@
+
+redis-cli.exe -h 127.0.0.1 -p 6379 [-a 密码]
+    进入redis服务[可选登陆时是否同时验证密码]
+    redis-cli -a <密码>: 登入redis服务的极简命令 
+密码:
+    config set requirepass <密码>: 设置密码
+    config get requirepass: 获取密码(需要先通过密码验证)
+    auth <密码>: 验证密码
+    另外一种修改密码的方法: 去redis.windows.conf文件中,新增requirepass [密码]
+    **两种方法以redis.windows.conf中配置的密码为准**
+    **比如: conf中配置了密码,又使用redis命令配置新密码,此时redis命令配置的密码生效,但是, 重启服务 后密码就变回conf中的配置**
+
+select <数据库编号>
+    切换当前数据库,redis默认有16个,即编号0-15

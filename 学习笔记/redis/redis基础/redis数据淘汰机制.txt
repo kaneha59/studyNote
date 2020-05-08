@@ -1,0 +1,21 @@
+redis的数据淘汰机制
+    为防止redis占用内存过高,当redis占用内存超过设定的最大值时,
+    redis可以启用内存淘汰机制将一些不重要的数据淘汰掉
+    在redis.conf配置文件中可以配置数据淘汰策略
+    maxmemory <bytes> 
+        设置redis最大内存占用容量
+    maxmemory-policy noeviction
+        设置数据淘汰策略
+    
+数据淘汰策略
+    noeviction禁止驱逐数据,默认设置
+    volatile-lru 从已设置过期时间的数据集中挑选最近最少使用的数据淘汰
+    volatile-ttl 从已设置过期时间的数据集中挑选将要过期的数据淘汰
+    volatile-random从已设置过期时间的数据集中任意选择数据淘汰
+    allkeys-lru从所有数据集中挑选最近最少使用的数据淘汰
+    allkeys-random从所有数据集中任意选择数据进行淘汰
+
+学习单词:
+    volatile: 
+        ['vɒlətaɪl]
+        不稳定的,易变的

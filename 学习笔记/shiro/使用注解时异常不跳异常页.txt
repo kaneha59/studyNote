@@ -1,0 +1,45 @@
+两种方法都是spring处理异常映射,本质上是一样的.
+    SimpleMappingExceptionResolver继承AbstractHandlerExceptionResolver,
+    而AbstractHandlerExceptionResolver实现了HandlerExceptionResolver...
+
+方法一:
+    @Configuration
+    public class ExceptionConf {
+        @Bean
+        public SimpleMappingExceptionResolver resolver() {
+            SimpleMappingExceptionResolver resolver = new SimpleMappingExceptionResolver();
+            Properties properties = new Properties();
+            properties.setProperty("org.apache.shiro.authz.UnauthorizedException", "/403");
+            resolver.setExceptionMappings(properties);
+            return resolver;
+        }
+    }
+
+方法二:
+    用spring mvc的统一异常处理类HandlerExceptionResolver
+
+    定义一个类继承HandlerExceptionResolver，然后判断UnauthorizedException异常即可。
+
+    public class MyExceptionResolver implements HandlerExceptionResolver {
+        @Override
+        public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) {
+            if (e instanceof UnauthorizedException) {
+                ModelAndView mv = new ModelAndView("/403");s
+                return mv;
+            }
+            return null;
+        }
+    }
+    然后，在启动类中注册该bean
+
+    @SpringBootApplication
+    public class DemoApplication {
+        public static void main(String[] args) {
+            SpringApplication.run(DemoApplication.class, args);
+        }
+        // 注册统一异常处理bean
+        @Bean
+        public MyExceptionResolver myExceptionResolver() {
+            return new MyExceptionResolver();
+        }
+    }

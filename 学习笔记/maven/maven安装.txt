@@ -1,0 +1,21 @@
+1.官网下载maven的二进制包,解压到指定目录
+
+2.系统环境变量设置.
+    1).添加MAVEN_HOME系统变量,值为maven根目录,例如: C:\coding\apache-maven-3.6.3
+    2).给系统变量Path添加一个值 %MAVEN_HOME%\bin
+
+3.打开cmd,输入mvn -version 测试是否成功安装
+
+至此安装已经完成,下面进行配置
+
+打开maven根目录的conf文件夹下settings.xml
+1.配置远程镜像
+    找到mirrors标签,配置远程镜像
+        <mirror>
+            <id>nexus-aliyun</id>
+            <mirrorOf>central</mirrorOf>
+            <name>Nexus aliyun</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+        </mirror>
+
+2.settings.xml具体内容自己上网查

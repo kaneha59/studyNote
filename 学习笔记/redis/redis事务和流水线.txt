@@ -1,0 +1,40 @@
+redis事务
+    借助SessionCallback接口来实现redis的事务.
+    实现redis事务分3个步骤:
+        watch(String key); // 设置监控的key
+        multi(); // 开启事务,在exec命令执行前,全部命令都只是进入队列
+        exec(); // 执行exec命令先判断key1是否被修改过,修改过则不执行,否则执行事务
+
+    下面是代码示例:
+        String result = (String) redisTemplate.execute(new SessionCallback<String>() {
+            @Override
+            public  String execute(RedisOperations redisOperations) throws DataAccessException {
+                redisOperations.watch("key1"); // 1. 监控key1
+                redisOperations.multi(); // 2. 开启事务,在exec命令执行前,全部命令都只是进入队列
+                BoundValueOperations key1_Ops = redisOperations.boundValueOps("key1");
+                key1_Ops.set("this is spada!!!");
+                List exec = redisOperations.exec(); // 3. 执行exec命令先判断key1是否被修改过,修改过则不执行,否则执行事务
+                System.out.println(exec + "lalala");
+                return key1_Ops.get().toString();
+            }
+        });
+        System.out.println(result);
+
+    注意: 1.执行事务前,若监控的键值对发生变化,则取消事务
+          2.执行队列中的命令时,即使报错,也会继续执行完.
+          3.exec()方法会返回一个list集合,内容是每条redis命令的执行情况,以布尔值表示,例如[true, true, true],表示全部3条命令都成功执行
+
+redis流水线
+    同redis事务用法一样,也是借助SessionCallback接口来实现,只是方法名不一样.不是execute()而是executePipelined()
+    用途: 默认情况,redis客户端是一条一条地发送命令给redis服务器,通过redis流水线可以将所有命令一次性发送到redis服务器,极大提高效率
+    代码模板如下:
+        // 和redis事务写法高度一致,只是没有watch,multi,exec的3步骤
+        redisTemplate.executePipelined(new SessionCallback<Object>() {
+            @Override
+            public <K, V> Object execute(RedisOperations<K, V> redisOperations) throws DataAccessException {
+                return null;
+            }
+        });
+
+注意: RedisOperations<K, V>是RedisTemplate<K, V>的实现接口.即
+            RedisTemplate<K, V>是RedisOperations<K, V>的实现类

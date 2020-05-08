@@ -1,0 +1,37 @@
+Shiro内置过滤器
+    默认过滤器可以参考org.apache.shiro.web.filter.mgt.DefaultFilter 中的枚举
+    
+1.filterChainDefinitions过滤器作用顺序:
+    从上往下,匹配成功即停止匹配 (所以使用通配符时要注意顺序!)
+
+
+参考: https://slike-v.github.io/2019/09/20/Shiro%E8%BF%87%E6%BB%A4%E5%99%A8%E4%B8%8E%E6%9D%83%E9%99%90%E8%AE%BE%E7%BD%AE
+
+
+认证过滤器:
+    authc:  FormAuthenticationFilter-->表单验证过滤器
+        /admins/user/**=authc  表示访问该路径需要认证
+    authcBasic:  BasicHttpAuthenticationFilter-->HTTP身份验证过滤器
+
+    anno:  AnonymousFilter-->匿名过滤器
+        /static/**=anon  无需登陆即可访问,一般用于静态资源过滤
+    user:  UserFilter-->用户过滤器
+        /**=user  用户已经身份验证/记住我登录的都可
+    logout:  LogoutFilter-->退出过滤器
+        /logout=logout  指退出成功后重定向的地址
+授权过滤器:
+    roles:  RolesAuthorizationFilter-->角色授权过滤器
+        /admin/**=roles["admin,guest"]  验证用户是否拥有所有角色   (必须拥有全部角色,多个角色时需要裹上双引号,角色之间用,分隔)
+    perms:  PermissionsAuthorizationFilter-->权限授权过滤器
+        /admins/user/**=perms["user:add:*,user:modify:*"]  验证用户是否拥有所有权限  **不会用...**
+    host:  HostFilter-->主机过滤器
+
+    port:  PortFilter-->端口过滤器
+        /admins/user/**=port[8081]  当用户访问页面是非8081端口时,将自动改为访问8081端口的同一路径/参数的地址
+    rest:  HttpMethodPermissionFilter-->rest风格过滤器
+        /admins/user/**=rest[user]  根据请求的方法,相当于/admins/user/**=perms[user:method],其中method为post,get,delete等  **不会用...**
+    ssl:  sslFilter-->SSL过滤器
+        /admins/user/**=ssl  表示安全的URL请求,协议为https
+其他过滤器:
+    noSessionCreation:  NoSessionCreationFilter-->不创建会话过滤器
+

@@ -1,0 +1,14 @@
+principal  [ˈprɪnsəpl]
+    adj. 首要的    n. 本人,资本    Shiro. 账户
+
+credential  krə'denʃl
+    n.	凭证    Shiro. 密码/凭证
+
+Authorization  [ˌɔθərəˈzeɪʃn]
+    n.授权，批准；  Shiro. 授权
+
+Authentication  [ɔˌθentɪ'keɪʃn]
+    n.证明，鉴定； 身份验证； 认证   Shiro. 认证(登陆)
+
+realm  [relm]
+    n.领域，范围；  Shiro. 用来从数据库获取存储的 认证和权限,进行认证和授权

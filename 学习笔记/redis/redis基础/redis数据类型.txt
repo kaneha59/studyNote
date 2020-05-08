@@ -1,0 +1,261 @@
+键(key):
+    del <key>
+        删除指定key
+    dump <key>
+        返回指定key的键值对序列化值
+    exists <key>
+        检查是否存在key
+    expire <key> <seconds>
+        给key设置过期时间
+    pexpire <key> <milliseconds>
+        以毫秒计
+    keys <pattern>
+        查找符合给定模式的key
+    move <key> <db编号>
+        将当前库的指定key移动到指定的数据库中. eg: move key1 3  ==>  把key1转移到3号数据库
+        redis默认有16个数据库,编号为0-15.
+    persist <key>
+        移除key的过期时间
+    ttl <key>
+        以秒为单位,返回给定key的剩余生存时间.  (TTL: time to live)
+    pttl <key>
+        以毫秒为单位返回 key 的剩余的过期时间
+    randomkey
+        从数据库中随机返回一个key
+    rename <key> <newkey>
+        修改key的名称
+    renamenx <key> <newkey>
+        仅当newkey不存在时,才能成功改名.(防止改名后将其他key顶掉)
+    type <key>
+        返回 key 所储存的值的类型
+
+
+
+字符串(String):
+    string类型是二进制安全的.所以string可以包含任何数据.一个键最大能存储512MB
+
+    set <key> <value>
+        设置指定key的值
+    get <key>
+        获取key的值
+    getrange <key> <start> <end>
+        按照指定范围截取key的值  eg: getrange key1 0 5 ==> 截取下标为0-5之间字符串
+    getset <key> <value>
+        给key设置新值,并返回旧值
+    mget <key1> [key2...]
+        一次获取多个key的值
+    setex <key> <seconds> <value>
+        设置指定key的值同时设置过期时间 (set命令也可以通过加 ex参数的方式达到同样效果)
+    psetex <key> <millisecondes> <value>
+        设置指定key的值同时以毫秒为单位设置过期时间 (set 命令中加 px参数)  set key1 hello px 1000
+    setnx <key> <value>
+        key不存在时才设置该键值对
+    setrange <key> <offset> <value>
+        用value参数,从offset偏移量开始,覆盖原值 eg: set key1 myname;    setrange key1 2 boy;  ==> *值由myname变为myboye*
+    strlen <key>
+        返回key对应的字符串的长度
+    mset <key> <value> [<key> <value>...]
+        批量设置键值对
+    msetnx <key> <value> [<key> <value>...]
+        当且仅当所有给定key都不存在时,批量设置键值对
+    incr <key>
+        将key存储的数字增加1
+    incrby <key> <increment>
+        将key存储的值加上给定的增加值  eg: incrby key1 99
+    incrbyfloat <key> <increment>
+        将key存储的值加上给定的浮点增加值   ge: incrbyfloat key1 1.6
+    decr <key>
+        将key存储的值减去1
+    decrby <key> <decrement>
+        将key存储的值减去给定的增加值
+    append <key> <value>
+        若key存在,则将指定value追加到原值尾部
+
+
+
+散列(hash):
+    是一个域值对(field-value)集合.
+
+    hdel <key> <field1> [field2...]
+        删除key对应的散列中的一个或多个键值对
+    hexists <key> <field>
+        查看哈希表中,指定field(字段)是否存在
+    hget <key> <field>
+        获取哈希表中指定field的值
+    hgetall <key>
+        获取指定散列(key)中所有键值对(键和值都显示)
+    hincrby <key> <field> <increment>
+        给指定散列中指定field的整数值增加increment
+    hincrbyfloat <key> <field> <increment>
+        给指定散列中指定field的浮点数值增加increment
+    hkeys key
+        获取指定散列(key)中的所有field
+    hlen <key>
+        获取指定散列中field的数量
+    hmget <key> <field1> [field2...]
+        获取所有给定field的值
+    hmset <key1 value1> [key2 value2...]
+        同时将多个 field-value (域-值)对设置到散列 key 中
+    hset <key> <field value>
+        给指定散列中field的值设置为value
+    hsetnx <key> <field value>
+        当指定散列中指定field不存在时,新增一个field-value对
+    hvals <key>
+        获取散列中的所有值
+
+
+
+列表(list):
+    实际上是链表
+
+    blpop <key1> [key2...] <timeout>
+    brpop <key1> [key2...] <timeout>
+        这两个可以实现'阻塞读取'(重要)和'分优先级任务队列'
+        从(头部/底部)弹出一个元素,若当前key中已经没有元素,则弹出下一个key的元素
+        如果所有key中都没有元素,则阻塞队列,知道超时或发现可弹出元素为止!
+    brpoplpush <source> <destination> <timeout>
+        从前一个列表的底部弹出一个元素,并插入到后一个列表的顶部,且返回该元素.若列表中没有元素则阻塞列表知道等待超时或发现可弹出元素为止
+    rpoplpush <source> <destination>
+        将前一个列表中的底部元素转移到后一个列表中的头部
+    lindex <key> <index>
+        通过索引获取列表中的元素
+    linsert <key> before/after <pivot> <value>
+        在pivot的 前/后 插入value linsert listkye1 before 'home' 'my'
+        pivot: 指点,轴心
+    llen <key>
+        获取列表长度
+    lpop <key>
+        弹出列表头部的第一个元素
+    rpop <key>
+        弹出列表底部的第一个元素
+    lpush <key> <value1> [value2...]
+        在列表头部插入一个或多个值(列表不存在则创建列表)
+    rpush <key> <value1> [value2...]
+        在列表底部插入一个或多个值(列表不存在则创建列表)
+    lpushx <key> <value>
+        将一个值插入列表头部,若该列表不存在,则操作无效
+    rpushx <key> <value>
+        将一个值插入列表底部,若该列表不存在,则操作无效
+    lrange <key> <start> <end>
+        获取指定范围内的元素  eg: lrange key1 0 -1  ==> 获取列表所有元素
+    lrem <key> <count> <value>
+        count = 0: 移除列表中所有与value相等的值
+        count > 0: 从表头开始移除列表中count个与value相等的元素
+        count < 0: 从表尾开始,移除列表中count的绝对值个与value相等的元素
+    lset <key> <index> <value>
+        通过索引设置列表元素的值
+    ltrim <key> <start> <end>
+        对列表进行修剪,移除下标范围外的所有元素
+
+
+
+集合(Set):
+    特性: 无序, 不重复
+
+    add <key> <member1> [member2...] 
+        向集合添加一个或多个成员
+    scard <key>
+        获取集合的成员数
+    sdiff <key1> [key2...]
+        返回key1中有而其他key集合中没有的成员 !!!注意: 只返回key1中有的成员
+        相当于求差集后,再在差集结果中剔除key1集合中没有的成员,然后返回
+    sdiffstore <destination> <key1> [key2...]
+        将所有集合求差集后,剔除key1中没有的成员,然后将返回集合转存入集合<destination>中
+        destination: 目的地,终点
+    sismember <key> <member>
+        判断集合中是否包含该成员
+    smembers <key>
+        返回集合中所有的成员
+    smove <source> <destination> <member>
+        将<source>集合中的成员<member>移动到<destination>中.注意: 集合是不重复的
+    spop <key> [count]
+        随机弹出集合中[count]个成员
+    srandmember <key> [count]
+        随机返回集合中的[count]个成员, 注意和pop的区别
+    srem <key> <member1> [member2...]
+        从集合中移除指定的若干个成员
+    sunion <key1> [key2...]
+        返回所有给定集合的并集(就是正常的那个并集,和sdiff那个奇葩差集效果不一样)
+    sunionstore <destination> <key1> [key2...]
+        将并集储存进<destination>集合中
+    sinter <key1> [key2...]
+        返回集合的差集
+    sinterstore <destination> <key1> [key2...]
+        将交集存入<destination>集合中
+    
+
+
+有序集合(sorted set):
+    和集合(Set)不同的是,每个成员都会关联一个double类型的分数(score)
+    redis就是基于score对成员进行排序的.
+    有序集合有分数(score)和索引(index),不要搞混了!
+    有序集合成员唯一,但分数可以重复
+    成员数少于64: 采用ziplist设计,时间复杂度为O(n)
+    成员数大于64: 采用hash和skiplist设计
+                    添加和删除: 需要修改skiplist,复杂度为O(log(n))
+                    查找: 直接使用hash,复杂度为O(1)
+                    range操作: 复杂度一般为O(log(n))
+    
+    zadd <key> <score1 member1> [score2 member2...]
+        向有序集合添加若干个成员，或者更新已存在成员的分数
+    zcard <key>
+        获取有序集合的成员数
+    zcount <key> <min> <max>
+        计算在有序集合中指定区间分数的成员数
+    zincrby <key> <increment> <member>
+        给指定成员的分数增加<increment>
+    zrange <key> <start> <end> [withscores]
+        按照索引返回索引区间内的成员,可选是否显示分数. eg: zrange zsetkey1 1 4 withscores
+        返回集合按照分数值递增,分数相同则按照字典序排列
+        *注意是按照索引截取!*
+        zrange key1 0 -1 ==> end为-1时表示返回下标从start开始的所有成员.
+    zrangebyscore <key> <start> <end> [withscores] [limit offset count]
+        按照分数返回区间内的成员,可选是否显示分数 eg: zrangebyscore zsetkey1 3 (20 withscores  ==> 返回 3<=分数<20 的成员集合
+        分数区间定义举例:
+            (3 (5  ==>  3<分数<5
+            3  (5  ==>  3<=分数<5
+            -inf +inf  ==>  最小值<=分数<=最大值
+        *注意和zrange的区别*
+    zrank <key> <member>
+        返回指定成员的索引/排名, (最小的是0)  注意和分数(score)区分开!
+    zrevrank <key> <member>
+        逆序返回指定成员的排名/索引(最大的是0)
+    zrem <key> <member1> [member2...]
+        移除若干个指定成员
+    zremrangebyrank <key> <start> <end>
+        移除给定索引区间内的所有成员
+    zremrangebyscore <key> <min> <max>
+        移除分数区间内的所有成员
+    zrevrang <key> <start> <end> [withscores]
+        逆序返回索引区间内的成员
+    zrevrangebyscore <key> <min> <max> [withscores] [LIMIT offset count]
+        逆序返回分数区间内的成员
+    zscore <key> <member>
+        返回指定成员的分数值(score)
+    zinterstore <destination> <keysnum> <key1> [key2...]
+        求<keysnum>个有序集合的交集,并保存结果到<destination>集合中.交集的分数是各个集合中该元素的score相加
+    zunionstore <destination> <keysnum> <key1> [key2...]
+        将<keysnum>个有序集合的并集放入<destination>集合中
+
+    带lex的都是无视分数的,单纯按照成员字典顺序排序:
+        zlexcount <key> <min> <max>
+            计算指定字典区间内的成员数量
+            字典顺序区间举例: 注意必须加[
+                [ac [dc  ==>  ac<=区间<=dc
+                (a  [d   ==>  a<区间<=b
+                -   +    ==>  最小值<=区间<=最大值
+        zrangebylex <key> <min> <max> [limit offset count]
+            返回指定字典区间内的成员
+            [limit offset count] 排名结果中从offset处截取count个,然后返回结果
+            eg: zrangebylex key1 [a [g limit 0 3  ==>  在>=a,且<=g的区间内,在偏移量为0的位置,截取3个成员.然后返回这3个成员
+        zremrangebylex <key> <min> <max>
+            移除指定字典区间内的成员
+    
+
+// TODO  累死了...找时间做吧...
+redis迭代命令:
+    scan
+    hscan
+    sscan
+    zscan
+    

@@ -1,0 +1,69 @@
+首先要了解remember me(记住我)的实现原理
+    登陆成功时,服务器会把登陆凭证(token)作为cookie发送给客户端.
+    关闭浏览器再打开,向服务器发送请求时会把token cookie发给服务器,服务器对比token正确,则实现免登录.
+
+Shiro实现remember me(记住我) 以springboot为例
+    1.在Shiro配置类中,注册simpleCookie和CookieRememberMeManager.
+    2.在用户提交表单中,添加checkbox记住我选框
+    3.在Controller的登陆方法中,以boolean类型接收remember me结果,并把该boolean值作为第三个参数传入UsernamePasswordToken中.
+    以上.
+
+关于免登录的权限:
+    remember me的权限为user级别,可通过user认证
+    但无法通过authc认证,切记!  authc认证级别的地址需要*真正地*登陆,才能通过认证,关闭浏览器就必须重新登陆认证.
+
+下面是参考代码:
+*******************************************ShiroConfig.java*******************************************
+添加以下代码到配置类
+    /**
+    * Cookie注册
+    */
+    @Bean
+    public SimpleCookie simpleCookie() {
+        SimpleCookie simpleCookie = new SimpleCookie("rememberMe");
+        simpleCookie.setMaxAge(3600);
+        return simpleCookie;
+    }
+
+    /**
+    * Cookie管理器
+    */
+    @Bean
+    public CookieRememberMeManager cookieRememberMeManager() {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(simpleCookie());// 设置cookie
+        cookieRememberMeManager.setCipherKey("jhuydxXUHyw187+1".getBytes());// cookie加密密钥,必须是16位
+        return cookieRememberMeManager;
+    }
+
+*******************************************login.html*******************************************
+    <form action="/login" method="post">
+        用户:
+        <input name="username" type="text" value=""><br>
+        密码:
+        <input name="password" type="text" value=""><br>
+        <input type="checkbox" name="rememberMe">记住我<br>
+        <button type="submit">提交</button>
+    </form>
+
+*******************************************login.html*******************************************
+    @RequestMapping("/login")
+    public String login(User user, Map<String, String> map, boolean rememberMe) {
+        //1. 获取subject,设置UsernamePasswordToken
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
+                user.getUsername(),
+                user.getPassword(),
+                rememberMe
+        );
+        //2. 执行登陆认证
+        try {
+            subject.login(usernamePasswordToken);
+        } catch (Exception e) {
+            String msg = e.getCause() + "  " + e.getMessage();
+            map.put("msg", msg);
+
+            return "login";
+        }
+        return "redirect:/hello";
+    }

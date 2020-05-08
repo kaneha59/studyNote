@@ -1,0 +1,8 @@
+
+
+登陆表单的action是否是action=""
+    否  ==>  1)在ShiroFilterFactoryBean中把action指向的URL设置为anon(无需认证)
+             2)在action指向的Controller方法中,通过Subject.login(usernamePasswordToken)方法认证登陆
+
+PS: 如果表单的action="",那么Shiro在后台会自动进行登陆认证,然后跳转页面到最早输入的URL(就是从这个地址跳转到表单登陆页面的)
+        所以如果一开始输入的是错误的URL,那么在跳转到登陆页面并成功登陆后,会跳转回这个错误URL,导致404.

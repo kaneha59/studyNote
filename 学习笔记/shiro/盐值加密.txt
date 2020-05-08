@@ -1,0 +1,10 @@
+https://www.cnblogs.com/jilodream/p/5104207.html
+
+什么是盐值加密,参考上边链接.
+
+具体内容先放放,之后再做.
+
+
+具体怎么盐值加密,参考下边链接
+
+https://blog.csdn.net/weixin_43517302/article/details/105418593

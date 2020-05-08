@@ -1,0 +1,35 @@
+当发布者向指定频道发布消息后,订阅该频道的所有订阅者都会收到此消息.
+    (只能消费订阅之后发布的消息)
+
+publish <channel> <message>
+    向指定频道发布一条消息,执行命令后会返回一个integer,表示该频道的订阅数
+
+subscribe <channel1> [channel2...]
+    订阅一个或多个频道.
+
+unsubscribe <channel1> [channel2...]
+    退订一个或多个频道
+
+psubscribe <pattern> [pattern...]
+    订阅一个或多个符合给定模式的频道(可能会重复订阅同一个频道,因为一个pattern可能会匹配到多个频道)
+punsubscribe <pattern> [pattern...]
+    退订所有符合给定模式的频道(和pattern按照严格的字符串匹配,意思是pattern必须一模一样)
+
+关于java实现redis订阅/发布的思路
+    发布: 只需要操作redis在指定频道发布消息即可
+    订阅: 订阅消息时需要一个'消息处理器/监听器', 当接收到发布消息时用来处理消息, '消息处理器/监听器'需要我们自己配置
+        1)消息处理器思路:
+            使用RedisConnection调用subscribe()方法时传入消息处理器和订阅的channel.
+                消息处理器需要自己继承指定类,实现方法
+                此时该线程会被阻塞.一直等待接收消息,需要在消息处理器中重写unsubscribe()方法并调用.
+        2)消息监听器思路:
+            1)配置消息监听器:实现MessageListener接口重写onMessage()方法
+            2)创建任务池: new ThreadPoolTaskScheduler(),并设置任务池参数.
+            3)定义redis的监听容器: new RedisMessageListenerContainer(),并配置连接工厂和监听频道, 将消息监听器和任务池装载入监听容器
+                这样一旦有消息发布到指定频道,监听容器就会指派监听器执行消息处理.
+        3)两者区别:
+            前者是手动控制, 手动订阅频道,可以控制退订从而停止阻塞
+            后者是后台运行, 是配置好后就一直在后台自动监听频道,处理消息.
+    具体代码不贴了,参考下边链接或看<深入浅出springboot>
+参考文章:
+    https://www.cnblogs.com/qlqwjy/p/9763754.html

@@ -1,0 +1,36 @@
+java操作redis的简单原理
+
+1.连接驱动,java连接redis的底层实现
+    jedis:
+    lettuce: springboot中默认使用lettuce连接驱动
+
+2.连接对象和连接工厂对象
+    RedisConnection接口和RedisConnectionFactory接口
+        * RedisConnection接口: Spring中,是通过RedisConnection接口来操作redis的
+        * RedisConnectionFactory接口: 用来获取RedisConnection接口对象
+        所以要在spring中注册RedisConnectionFactory的接口对象,可以通过该接口获取连接对象(RedisConnection)
+
+3.RedisTemplate: 使用最多的类,是spring操作redis的重点内容,后边会详细讲
+    给RedisTemplate设置连接工厂对象后(使用set方法),它可以自动从工厂中获取连接对象,执行redis命令,并关闭连接.
+
+4.序列化器
+    把java中的对象存入redis需要使用序列化器和反序列化器.
+    常用序列化器:
+        JDKSerializationRedisSerializer: 默认序列化器,需要实体类实现Serializable接口,
+        StringRedisSerializer: 字符串序列化器
+            redisTemplate会自动初始化StringRedisSerializer,所以可以直接获取
+                redisTemplate.getStringSerializer();
+        GenericJackson2JsonRedisSerializer: 无需实现Serializable接口即可序列化对象
+
+    怎么设置序列化器:
+        使用redisTemplate的set方法来设置序列化器.
+        RedisTemplate中内置了几个可以配置的序列化器属性:
+            defaultSerializer: 默认序列化器 ==> 默认使用JDKSerializationRedisSerializer
+            keySerializer: redis键序列化器 ==> -使用默认序列化器-
+            valueSerializer: redis值序列化器 ==> -使用默认序列化器-
+            hashKeySerializer: redis散列结构field序列化器 ==> -使用默认序列化器-
+            hashValueSerializer: redis散列结构value序列化器 ==> -使用默认序列化器-
+            stringSerializer: 字符串序列化器 ==> 默认使用StringRedisSerializer
+        直接调用redisTemplate的相关set方法设置相关属性即可!
+
+5.给redis设置完连接工厂,序列化器后,就可以操作RedisTemplate来操作redis了!

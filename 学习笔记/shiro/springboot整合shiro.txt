@@ -1,0 +1,152 @@
+POM配置
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
+1.创建自定义Realm
+    该类继承AuthorizingRealm,实现2个抽象方法
+        doGetAuthorizationInfo   ==> 负责授权(查看是否有权限)
+        doGetAuthenticationInfo  ==> 负责认证(认证账号密码)
+    Realm类是和DB打交道的,
+        主要工作是从数据库获取账户或账户权限信息,并装入SimpleAuthenticationInfo或SimpleAuthorizationInfo并返回该对象,
+        之后Shiro会自动通过 认证器(Authenticator)/授权器(Authorizer) 来进行 认证/授权
+
+2.创建shiro的配置类 (使用@Configuration)
+    1) 注册自定义Realm类
+    2) 使用DefaultWebSecurityManager注册安全管理器(securityManager),把自定义Realm装入securityManager
+    3) 注册ShiroFilterFactoryBean,装载securityManager并设置过滤连.
+    4) 开启Shiro对注解的支持,注册AuthorizationAttributeSourceAdvisor和DefaultAdvisorAutoProxyCreator
+
+3.Controller中使用Shiro进行认证/授权
+    通过SecurityUtils获取Subject,然后用subject对象来登陆认证或授权验证
+
+    或者把注解加到方法上进行授权验证,例如@RequiresRoles("admin"), @RequiresPermissions("add")等等
+
+
+
+
+
+
+
+下边是代码示例:
+
+                    ****************** 自定义Realm ******************
+
+public class CustomRealm extends AuthorizingRealm {
+
+    @Autowired
+    UserController uc;
+
+    /**
+     * doGet Authorization Info
+     * 授权(验证用户权限)
+     */
+    @Override
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        //1. 获取用户名并以此从DB中获取User对象
+        String name = (String) principalCollection.getPrimaryPrincipal();
+        User user = uc.getUserByName(name);
+
+        //2. 创建SimpleAuthorizationInfo并将刚才获取的user的角色和权限添加进去
+        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        for(Role role : user.getRoles()) {
+            // 添加角色
+            simpleAuthorizationInfo.addRole(role.getRoleName());
+            // 添加权限
+            for(Permission permissions : role.getPermissions()) {
+                simpleAuthorizationInfo.addStringPermission(permissions.getPermissionName());
+            }
+        }
+        //3. 返回simpleAuthorizationInfo
+        return simpleAuthorizationInfo;
+    }
+
+    /**
+     * doGet Authentication Info
+     * 认证(验证用户密码)
+     */
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        //1. 获取用户名并以此从DB中获取User对象
+        if(authenticationToken.getPrincipal() == null) {
+            return null;
+        }
+        String name = authenticationToken.getPrincipal().toString();
+        User user = uc.getUserByName(name);
+
+        //2. 若获取到user对象,则把查询到的账户,密码和realm的名字装入SimpleAuthenticationInfo并返回
+        if(user == null) {
+            return null;
+        } else {
+            return new SimpleAuthenticationInfo(name, user.getPassword(), getName());
+        }
+    }
+
+
+
+                   ****************** shiro的配置类 ******************
+
+
+@Configuration
+public class ShiroConfig {
+
+    /**
+     * 配置shiro过滤器
+     */
+    @Bean
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+        Map<String, String> map = new LinkedHashMap<>();
+        //登出
+        map.put("/logout", "logout");
+        map.put("/login", "anon");
+        //对所有用户认证
+        map.put("/**", "authc");
+
+        // 需要登陆时跳转的地址
+        shiroFilterFactoryBean.setLoginUrl("/loginPage");
+        // 登陆成功时默认跳转地址
+        shiroFilterFactoryBean.setSuccessUrl("/hello");
+        // 没有权限时默认跳转的地址
+        shiroFilterFactoryBean.setUnauthorizedUrl("/errorPage");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
+        return shiroFilterFactoryBean;
+    }
+
+    /**
+     * 注册自定义的realm
+     */
+    @Bean
+    public CustomRealm myShiroRealm() {
+        return new CustomRealm();
+    }
+
+    @Bean
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(myShiroRealm());
+        return securityManager;
+    }
+
+    /**
+     * 开启shiro aop注解支持
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager){
+        AuthorizationAttributeSourceAdvisor attributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        //设置安全管理器
+        attributeSourceAdvisor.setSecurityManager(securityManager);
+        return attributeSourceAdvisor;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator defaultAAP = new DefaultAdvisorAutoProxyCreator();
+        defaultAAP.setProxyTargetClass(true);
+        return defaultAAP;
+    }

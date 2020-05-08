@@ -120,11 +120,12 @@ git remote: 显示远程服务器的简写
     git remote add <shortName> <url>: 添加一个远程仓库.添加后就可以使用shortName来代替url了
     git remote show [remote-name]: 显示远程仓库的详细信息,例如本地分支和远程分支的连接关系等等
 
-git fetch [远程主机名] [分支名]:
+git fetch <远程主机名> <分支名>:
     git fetch --all: 抓取所有远程仓库
 
-git pull [远程主机名] [分支名]:
+git pull <远程主机名> <分支名>:
     git pull --rebase: 拉取时使用变基而不是快进或三方合并
+    git pull <远程主机名> <分支名> --allow-unrelated-history: 允许不相关历史的合并
 
 git push <remote-name> [branch-name]: 推送到远程仓库
     git push <remote-name> <tagname>: 推送标签到远程仓库(默认push命令不会推送标签到远程仓库)
@@ -165,6 +166,7 @@ git branch: 查看分支
     git branch  --set-upstream-to <remotename>/<branch>: 同上
 
 git merge <分支名>: 合并分支到当前分支
+    git merge <分支名> --allow-unrelated-history: 允许不相关历史的合并
 
 git mergetool: 启用图形化编辑工具
 

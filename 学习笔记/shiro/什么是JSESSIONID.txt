@@ -1,0 +1,15 @@
+首先，并不是说你一打开一个页面就会产生一个session。
+所谓session你可以这样理解：当你与服务端进行会话时，比如说登陆成功后，服务端会为你开壁一块内存区间，用以存放你这次会话的一些内容，比如说用户名之类的。
+那么就需要一个东西来标志这个内存区间是你的而不是别人的，这个东西就是session id(jsessionid只是tomcat中对session id的叫法，在其它容器里面，不一定就是叫jsessionid了。),而这个内存区间你可以理解为session。
+然后，服务器会将这个session id发回给你的浏览器，放入你的浏览器的cookies中（这个cookies是内存cookies，跟一般的不一样，它会随着浏览器的关闭而消失）。
+之后，只有你浏览器没有关闭，你每向服务器发请求，服务器就会从你发送过来的cookies中拿出这个session id,然后根据这个session id到相应的内存中取你之前存放的数据。
+但是，如果你退出登陆了，服务器会清掉属于你的内存区域，所以你再登的话，会产生一个新的session了。
+
+什么是JSESSIONID?
+    1.当你与服务端进行会话时,服务端会给你开辟一块内存区间,即Session
+    2.同时,服务器会将指向这个Session的一个标识作为Cookie发送给客户端,即JSESSIONID
+    3.只要浏览器没有关闭,你每次向服务器发请求,都会把这个cookie发送给服务器,服务器根据JSESSIONID找到相应的内存取出你之前存的数据.
+    4.如果关闭浏览器,浏览器会删除本地存储的JSESSIONID cookie.
+        但服务器上的Session并没有删除,只是cookie中没有JSESSIONID,所以找不到原先的Session了.
+    5.如果退出登录,服务器会删除SESSION.本地当前的JSESSIONID cookie就没用了. 
+        此时重新向服务器发送请求,服务器会重新开辟SESSION,并发送新的JSESSIONID到客户端.

@@ -1,0 +1,6 @@
+
+@Cacheable注解不生效:
+    项目中是否使用了Shiro?
+        是: 在自定义realm中注入的service生命上添加@Lazy注解懒加载.
+            产生原因: 多个Advisor加载导致的问题,
+                    参考stackouverflow中的回答:https://stackoverflow.com/questions/21512791/spring-service-with-cacheable-methods-gets-initialized-without-cache-when-autowi

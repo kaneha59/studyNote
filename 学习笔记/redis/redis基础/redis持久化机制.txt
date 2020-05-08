@@ -1,0 +1,31 @@
+RDB持久化(redis database)
+    redis默认的持久化机制.
+    定时将内存中的数据集快照写入磁盘,crash后最后一次保存之后的数据会丢失
+
+AOF持久化(append only file)
+    以日志的形式持续记录写操作,crash后利用日志恢复.crash前没有来得及做日志的数据会丢失
+    
+    AOF同步频率:
+        always: 随时同步,速度慢
+        everysec: 默认配置, 每秒同步一次,效率较高
+        no: 从不同不,高效但数据不会被持久化
+
+两种策略如何选择:
+    可以同时使用.
+    单独使用RDB可能造成数分钟的数据丢失
+    单独使用AOF不便于数据库备份,且RDB恢复数据集的速度也比AOF快
+
+对比:
+    RDB:
+        1.性能更高,但数据丢失风险更大
+        2.生成RDB快照,方便数据备份
+    AOF:
+        1.性能差一些,但具有更高的缓存一致性
+        2.不方便备份数据
+
+
+
+有待完善,抽时间参考下边文章深入学习
+参考文章
+    https://blog.csdn.net/jackpk/article/details/30073097
+    https://www.jb51.net/article/65264.htm

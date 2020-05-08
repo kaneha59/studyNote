@@ -1,0 +1,50 @@
+spring操作redis数据类型
+
+完成spring和redis的整合配置后,即可通过RedisTemplate来操作redis.
+
+1.Redis支持的7种数据结构:
+    字符串
+    散列
+    列表(链表)
+    集合
+    有序集合
+    基数
+    地理位置
+
+    spring对每一种数据结构的操作都提供了对应的接口
+        redisTemplate.opsForValue();
+        redisTemplate.opsForHash();
+        redisTemplate.opsForList();
+        redisTemplate.opsForSet();
+        redisTemplate.opsForZSet();
+        redisTemplate.opsForHyperLogLog();
+        redisTemplate.opsForGeo();
+            使用以上方法获取针对某种数据结构的操作接口,通过此接口来操作对应结构的数据.例如:
+                redisTemplate.opsForValue().set("user", new User(1L, "张三", "男"));
+            注意:
+                redis中的数据结构并不对应java中的某种数据类型,单纯的只是数据*结构*,
+                    例如redis的字符串数据结构中可存储java中的各种类型对象,比如User,HashMap,Integer等等
+            重要!!!:
+                每次使用opsForXXX()都会重新获取新的连接对象,造成资源浪费,可以使用SessionCallback接口来在同一条连接下执行多个redis命令
+    获取绑定键(key)的操作接口
+        redisTemplate.boundValueOps("key");
+        redisTemplate.boundHashOps("key");
+        redisTemplate.boundListOps("key");
+        redisTemplate.boundSetOps("key");
+        redisTemplate.boundZSetOps("key");
+        redisTemplate.boundGeoOps("key");
+            获取绑定键(key)的操作接口后,就可以对某个键(key)的数据进行多次操作,无需反复使用opsForXXX()获取操作接口
+    
+    SessionCallback接口
+        // 使用redisTemplate中的execute重载方法
+        // 通过SessionCallback接口来使RedisTemplate进行回调,实现在同一条连接下执行多个redis命令
+        redisTemplate.execute(new SessionCallback<Object>() {
+            @Override
+            public <K, V> Object execute(RedisOperations<K, V> redisOperations) throws DataAccessException {
+                return null;
+            }
+        });
+        // 另外一个方法, RedisCallback接口更加底层,使用较麻烦,此处不做介绍
+
+        注意: RedisOperations<K, V>是RedisTemplate<K, V>的实现接口.即
+            RedisTemplate<K, V>是RedisOperations<K, V>的实现类

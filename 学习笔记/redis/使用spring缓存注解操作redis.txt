@@ -1,0 +1,29 @@
+springboot配置:
+
+1.在application.properties上配置缓存管理器
+    #配置spring缓存管理器
+    spring.cache.type=redis    #缓存类型
+    spring.cache.cache-names=redisCache    #缓存名称
+
+    #配置redis缓存管理器
+    spring.cache.redis.cache-null-values=false    #是否允许redis缓存空值
+    spring.cache.redis.use-key-prefix=true    #是否启用redis的键前缀,默认为true
+    spring.cache.redis.key-prefix=cache::    #redis的键前缀,默认为spring.cache.cache-names的值加俩:: ,比如 redisCache::xxxxx
+    spring.cache.redis.time-to-live=0    #缓存超时时间
+
+2.在启动器类或redis配置类上添加@EnableCaching注解
+
+配置完毕后即可在业务层加上缓存注解启用缓存了.
+    缓存注解使用参考:
+        @Cacheable(value = "redisCache", key = "'redis_user_' + #id")
+            优先从缓存中获取,以方法入参的id为key
+        @CachePut(value =  "redisCache", key = "'redis_user_' + #result.id")
+            方法执行后,把返回值放入缓存
+        @CachePut(value =  "redisCache", key = "'redis_user_' + #result.id", condition = "#result != null ")
+            返回值为空时不缓存,有返回值才缓存
+        @CacheEvict(value =  "redisCache", key = "'redis_user_' + #result.id", beforeInvocation = false)
+            方法执行后删除缓存中的key
+
+自定义redis缓存管理器RedisCacheManager
+    省略,<深入浅出springboot>书上有,或者上网查
+    

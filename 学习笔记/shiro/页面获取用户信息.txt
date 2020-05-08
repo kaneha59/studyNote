@@ -1,0 +1,37 @@
+
+JSP:  
+    不确定对不对,找机会自己试试
+    <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %> 
+    <shiro:principal property="name"/> 相当于((User)Subject.getPrincipals()).getName()
+
+thymeleaf:
+    需要借助第三方组件实现
+    
+    1.引入第三方组件
+        <dependency>
+            <groupId>com.github.theborakompanioni</groupId>
+            <artifactId>thymeleaf-extras-shiro</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+    
+    2.在shiro配置文件注册shiroDialect
+        @Bean(name = "shiroDialect")
+        public ShiroDialect shiroDialect() {
+            return new ShiroDialect();
+        }
+
+    3.页面html标签内添加属性
+        xmlns:shiro="http://www.pollix.at/thymeleaf/shiro"
+    4.在标签内使用shiro:xxxx属性来 获取用户名/验证用户权限
+
+
+例子: 
+    <p shiro:user>啦啦啦</p>
+        已登陆/记住我 状态下显示内容
+    <shiro:principal/>
+        获取当前用户的用户名
+    <p shiro:guest="">我是访客</p>
+        访客权限(未登录)时显示内容
+    <p shiro:hasAllRoles="root, admin">有root和admin权限</p>
+        用户同时有指定权限时显示内容
+        
