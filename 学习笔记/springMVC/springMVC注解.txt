@@ -1,0 +1,40 @@
+@RequestParam: 用于前后端参数名不一致时,绑定请求参数
+    name: 和前端参数名保持一致
+    required: 设置是否不能为空,默认true
+    defaultValue: 设置默认值
+
+@PathVariable: 和@RequestMapping联动使用,可以用来解决用户个人主页的路径映射问题
+    name: 
+    required: 设置是否不能为空,默认true
+    用例:
+        @RequestMapping("/test/{username}")
+        public String userPage(@PathVariable("username") String username, Model model) {...} 
+    在地址栏中输入xxxx.xxx/test/zhangsan, url中的zhangsan就能作为属性值映射到userPage()方法的入参username上
+
+@SpringBootApplication
+    约等于@SpringbootConfiguration + @EnableAutoConfiguration + @ComponentScan
+
+@ComponentScan: 注解扫描器,默认扫描当前类所在包及其子包下的注解
+    
+@ModelAttribute
+    用在方法上: 该Controller类中,所有方法执行前都会先执行@ModelAttribute标注的方法,可以看作是测试类中@Before标注的方法
+        无返回值: 纯粹的前置方法
+        有返回值: 不仅是前置方法,还会把返回值添加到model中(不是request中),key为返回类型首字母小写.例如: User ==> user
+                    或者在主街上添加value属性,自己制定key值,例如: @ModelAttribute("haruka")
+    用在入参上: 从model中取出指定属性进行参数绑定.(不是request,request中的parameter取不到的)
+                    例如: public String modelAttrTest(@ModelAttribute("haruka") String haruka) {...} 
+                             ==>  从model中取出haruka属性
+
+@SessionAttribute: 放在入参前. 可以自动将session中对应的属性绑定到入参
+    String value(): 绑定的属性的名字
+
+@SessionAttributes: 放到Controller类上,会在 转发或重定向时 自动把指定的属性从Model保存至Session中
+    String[] value(): 想要存入session的model属性名数组
+    Class<?>[] types(): 必须指定types属性才能装入 基本类型和String 以外的数据类型,例如POJO
+    例子:
+        @SessionAttributes(value = {"str1", "user"}, types = {User.class})
+    注意:
+        1.只会保存model中的属性,不会保存request中的属性
+        2.@ModelAttribute如果指定value值的话,也可以用session中的属性绑定入参,不指定value值的话不行.
+        3.不能在标注@ResponseBody的方法内装填数据! 因为这种方法直接响应请求,不经过转发/重定向, 会导致异常!
+                java.lang.IllegalStateException: Cannot create a session after the response has been committed

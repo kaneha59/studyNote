@@ -1,0 +1,23 @@
+有时候重定向的时候需要传一些参数过去.
+    因为重定向是重新发送一次请求,所以之前请求中的参数会丢失.
+
+为了解决这个问题,我们可以把参数放到会话(session)中,但这样之后还要手动删除参数,不是很方便.
+
+所以我们可以使用 RedirectAttributes 来帮我们简化这个操作.
+
+    @RequestMapping("/redirect")
+    public String redirectTest(RedirectAttributes model) {
+        model.addFlashAttribute("redirectInfo", "重定向传输数据");
+        return "redirect:/target";
+    }
+
+    @RequestMapping("/target")
+    @ResponseBody
+    public String target(Model model) {
+        Object redirectInfo = model.getAttribute("redirectInfo");
+        return redirectInfo==null ? "失败" : redirectInfo.toString();
+    }
+
+实现原理很简单:
+    1.重定向执行前,所有flash参数会被放入会话中.
+    2.重定向后,flash参数会被取出并放入模型中.

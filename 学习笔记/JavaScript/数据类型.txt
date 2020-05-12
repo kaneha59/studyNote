@@ -1,0 +1,26 @@
+值类型(基本类型):
+    字符串(String): 字符串不是对象! new出来的字符串是对象 -> new String("xxx").
+    数字(Number)
+    布尔(Boolean)
+    空(Null)
+    未定义(Undefined)
+    Symbol
+引用数据类型: 
+    对象(Object)
+    数组(Array)
+    函数(Function)
+
+关于Symbol:
+    Symbol表示独一无二的值.
+    Symbol不是对象,没有构造函数,所以不能new.
+    声明Symbol:
+        let symbol_1 = Symbol();
+        let symbol_2 = Symbol();
+        let symbol_3 = Symbol("hi");    // 括号内的可以看作是注释
+        let symbol_4 = Symbol("hi"); 
+    判断:
+        symbol_1 == symbol_2;  // false
+        symbol_1 === symbol_2; // false
+        symbol_3 == symbol_4;  // false
+        symbol_3 === symbol_4; // false
+    

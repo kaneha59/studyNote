@@ -23,7 +23,8 @@ Shiro内置过滤器
     roles:  RolesAuthorizationFilter-->角色授权过滤器
         /admin/**=roles["admin,guest"]  验证用户是否拥有所有角色   (必须拥有全部角色,多个角色时需要裹上双引号,角色之间用,分隔)
     perms:  PermissionsAuthorizationFilter-->权限授权过滤器
-        /admins/user/**=perms["user:add:*,user:modify:*"]  验证用户是否拥有所有权限  **不会用...**
+        /admins/user/**=perms["user:add:*,user:modify:*"]  验证用户是否拥有所有权限 
+        map.put("/test/testAuth", "roles[save, delete, select]");
     host:  HostFilter-->主机过滤器
 
     port:  PortFilter-->端口过滤器

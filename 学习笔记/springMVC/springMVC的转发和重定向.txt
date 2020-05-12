@@ -1,0 +1,19 @@
+转发和重定向的区别:
+    写法区别(Controller层方法中):
+        转发: return "forward:/forwardTest";
+        重定向: return "redirect:/redirectTest";
+    url地址: 
+        转发地址栏地址不变,重定向地址发生改变.
+        Controller层方法中,转发显示@RequestMapping中的地址, 重定向显示return "xxx"的地址
+            转发:   /test/forward  ==>  转发到/target  ==>  地址栏显示地址: /test/forward
+            重定向: /test/redirect  ==> 重定向到/redirect  ==>  地址栏显示地址: /redirect
+    访问权限区别:
+        转发: 可以访问WEB-INF
+        重定向: 不能访问WEB-INF
+    流程区别: 
+        转 发: 是把接收到的请求转发给其他url
+        重定向: 是驳回请求,要求客户端重新发送新的请求到指定url.
+
+可能遇到的问题
+    无法重定向到templates下的html(或WEB-INF下的jsp)
+        因为重定向是第二次请求,直接重定向到页面, 不经过Controller层解析,所以不能直接访问.可以选择重定向到Controller层方法

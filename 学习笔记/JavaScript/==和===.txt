@@ -1,0 +1,26 @@
+===
+    严格相等运算符
+    类型不同: 直接false
+    类型相同: 基本类型比较值,复合类型比较指向地址
+==
+    相等运算符
+    类型不同: 先转换成同一类型在比较
+    原始类型间比较: 把两者都转换成数值再比较
+    对象和原始类型比较: 把对象转换成原始类型的值再进行比较
+    
+
+相等运算符会造成一些问题:
+    '' == '0'           // false
+    0 == ''             // true
+    0 == '0'            // true
+
+    false == 'false'    // false
+    false == '0'        // true
+
+    false == undefined  // false
+    false == null       // false
+    null == undefined   // true
+
+    ' \t\r\n ' == 0     // true
+
+建议弃用==

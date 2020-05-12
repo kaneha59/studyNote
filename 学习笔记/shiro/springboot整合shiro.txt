@@ -150,3 +150,30 @@ public class ShiroConfig {
         defaultAAP.setProxyTargetClass(true);
         return defaultAAP;
     }
+
+
+
+                    ****************** Controller层方法 ******************
+
+
+        @RequestMapping("/login")
+    public String login(User user, Map<String, String> map, boolean rememberMe) {
+        //1. 获取subject,设置UsernamePasswordToken
+        Subject subject = SecurityUtils.getSubject();
+
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
+                user.getUsername(),
+                user.getPassword(),
+                rememberMe
+        );
+        //2. 执行登陆认证
+        try {
+            subject.login(usernamePasswordToken);
+        } catch (Exception e) {
+            String msg = e.getCause() + "  " + e.getMessage();
+            map.put("msg", msg);
+
+            return "login";
+        }
+        return "homePage";
+    }

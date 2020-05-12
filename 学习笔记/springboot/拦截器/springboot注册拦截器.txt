@@ -1,5 +1,8 @@
 在MVC的配置类中注册:
-    覆盖WebMvcConfigurer的addInterceptors(InterceptorRegistry registry)方法,用registry.addInterceptor添加到配置
+    Mvc配置类中重写addInterceptors(InterceptorRegistry registry)方法,用registry.addInterceptor添加到配置
         示例:
-            registry.addInterceptor(LoginInterceptor()).addPathPatterns("/**");
-            registry.addInterceptor(AuthorityInterceptor()).addPathPatterns("/**");
+            registry.addInterceptor(拦截器bean.addPathPatterns("/**");
+
+创建Mvc配置类:
+    1.新建配置类,实现WebMvcConfigurer接口.
+    2.在类上添加注解 @EnableWebMvc和@Configuration

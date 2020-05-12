@@ -1,0 +1,16 @@
+
+/**
+    *  1: @RequestMapping 使用 '/{username}' 类型路径
+    *  2: @PathVariable 标注在入参上可以获取并绑定'/{username}'中username的值了!
+    *  
+    *  总结: @PathVariable必须要结合路径变量,一起使用
+    */
+@RequestMapping("/pathVariable/{username}")
+@ResponseBody
+public String test(@PathVariable String username) {
+    return "重定向成功: " + username;
+}
+
+验证:
+    1.输入url: localhost:8081/pathVariable/Asuna
+    2.上面的test()方法即可成功绑定入参username=Asuna

@@ -1,0 +1,80 @@
+
+先看http状态码:
+    302:
+        检查安全插件是否拦截了静态资源,把所有访问权限改为匿名可访问试试.(已确认shiro会有影响)
+
+    404:
+        查看是否把static写入url中了.在springboot中,访问static包下的资源无需把static写入url中!
+如果还没解决:
+        如果以上2种情况都排除了,依然不能访问静态路径,那么:
+            1.检查静态资源是否不在static目录下,而在其他自定义的包下.
+            2.如果不想用static包,想自定义静态资源包,那么可以参考最下边的 '修改资源映射路径'
+                注意: 修改资源映射路径配置不当可能导致无效,参考下边的 '修改资源映射路径'
+
+springboot结构目录示例:
+    -main
+        +java
+        -resources
+            -static
+                -img
+                    apple.jpg
+            +templates
+            application.properties
+
+springboot中访问static包下资源的正确url示例: 
+    <img src="/img/apple.jpg">
+    或者
+    <img src="img/apple.jpg">
+
+错误url示例:
+    <img src="/static/img/apple.jpg">
+    <img src="../static/img/apple.jpg">
+
+修改资源映射路径:
+    application.properties修改法:
+        spring.mvc.static-path-pattern=/**
+        spring.resources.static-locations=classpath:/someResource/, classpath:/static/
+        注意: 
+            如果在Mvc配置类上使用了@EnableWebMvc注解
+                ·重写了addResourceHandlers(): 
+                    那么以Mvc配置类中重写的重写了addResourceHandlers()为准
+                ·没有重写addResourceHandlers():
+                    则application.properties中配置的映射路径无效,会导致404.
+                所以: 必须重写该方法
+            如果Mvc配置类里没有使用@EnableWebMvc注解
+                ·无影响. application.properties中的配置可以正常生效
+
+
+    mvc配置类修改法:
+        1.创建配置类. 新建一个类,implements WebMvcConfigurer接口,然后类上添加@EnableWebMvc,@Configuration
+        2.重写addResourceHandlers方法,用该方法的入参设定路径pattern和映射的locations
+
+        参考代码:
+            package com.jy.simpleweb.config;
+
+            import org.springframework.context.annotation.Configuration;
+            import org.springframework.web.servlet.config.annotation.*;
+
+            @EnableWebMvc
+            @Configuration
+            public class MvcConfig implements WebMvcConfigurer {
+                @Override
+                public void addResourceHandlers(ResourceHandlerRegistry registry) {
+                    registry.addResourceHandler("/**")
+                            .addResourceLocations("classpath:/ggg/")
+                            .addResourceLocations("classpath:/static/");
+                    /*
+                        ↑↑↑↑↑↑↑↑ 注意!一定要连着添加映射路径 ↑↑↑↑↑↑↑↑
+                            
+                        ↓↓↓↓↓↓↓↓ 下边是错误示范 ↓↓↓↓↓↓↓↓
+                    */
+                    // 错误示范1: 一个addResourceLocation()内添加多个映射路径,这样会全部失效
+                    // 正确 方式: 要连续多次调用addResourceLocations(),每次添加一个映射路径.
+                    // registry.addResourceHandler("/**").addResourceLocations("classpath:/static/, classpath:/ggg/");
+
+                    // 错误示范2: 相当于是重复添加了/**的映射路径,第二行把第一行覆盖掉了.
+                    // registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+                    // registry.addResourceHandler("/**").addResourceLocations("classpath:/ggg/");
+                }
+
+            } 
