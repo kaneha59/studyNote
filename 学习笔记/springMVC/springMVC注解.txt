@@ -29,12 +29,17 @@
     String value(): 绑定的属性的名字
 
 @SessionAttributes: 放到Controller类上,会在 转发或重定向时 自动把指定的属性从Model保存至Session中
-    String[] value(): 想要存入session的model属性名数组
-    Class<?>[] types(): 必须指定types属性才能装入 基本类型和String 以外的数据类型,例如POJO
+                    可以单独按照Model中的 key值 或 类型 来储存Session,也可以两者都指定
+    String[] value(): 将Model中指定key的属性存入Session
+    Class<?>[] types(): 将Model中指定类型的属性存入Session(即,Model中储存的所有类型为指定类型的属性,都存入Session)
+
     例子:
         @SessionAttributes(value = {"str1", "user"}, types = {User.class})
+        @SessionAttributes(types = {Long.class}) // 把Model中所有Long类型的属性存入Session
     注意:
         1.只会保存model中的属性,不会保存request中的属性
-        2.@ModelAttribute如果指定value值的话,也可以用session中的属性绑定入参,不指定value值的话不行.
+        2.@ModelAttribute如果指定value值的话,也可以用session中的同名属性绑定入参,不指定value值的话不行.
         3.不能在标注@ResponseBody的方法内装填数据! 因为这种方法直接响应请求,不经过转发/重定向, 会导致异常!
                 java.lang.IllegalStateException: Cannot create a session after the response has been committed
+
+                , types = {Users.class, BigDecimal.class}

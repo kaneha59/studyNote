@@ -1,0 +1,20 @@
+
+
+    <tr th:each="user,userStat : ${users}" th:id="'item:' + ${userStat.index}">
+        <td th:text="${userStat.index + 1}">xxx</td>
+        <td th:text="${user?.id}">xxx</td>
+        <td th:text="${user?.username}">xxx</td>
+        <td th:text="${user?.password}">xxx</td>
+        <td th:text="${user?.roles}">xxx</td>
+        <td>
+            <!-- 傻逼传参方法 -->
+            <!-- <p th:onclick="'deleteUser(' + ${user?.id} + ',' + ${userStat.index} + ')'">删除用户</p> -->
+            <!-- 正常传参方法 -->
+            <p th:onclick="|deleteUser(${user?.id}, ${userStat.index})|">删除用户</p>
+        </td>
+    </tr>
+
+th:each 遍历集合
+    th:each="user,userStat : ${users}"
+        其中,user是遍历的元素,userStat保存当前页数等信息, ${users}是被遍历的集合
+        如果不声明userStat的话,也可以直接用,默认名字是 遍历元素名+Stat, 例如: userStat

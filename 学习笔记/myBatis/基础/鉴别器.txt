@@ -1,0 +1,76 @@
+有时候，一个数据库查询可能会返回多个不同的结果集
+
+鉴别器的概念很好理解——它很像 Java 语言中的 switch 语句。
+
+一个鉴别器的定义需要指定 column 和 javaType 属性。column 指定了 MyBatis 查询被比较值的地方。 而 javaType 用来确保使用正确的相等测试
+
+先粗略粘贴这么多,很简单的东西,抽空完善
+
+鉴别器大概作用就是根据查询字段不同的值,返回不同的结果集(resultMap).很简单.<discriminator>元素位于<resultMap>元素下
+
+下边用vehicle(交通工具), car(汽车), truck(卡车), van(面包车), suv(越野车)举例
+	vehicle是car, truck, van, suv的父类
+
+鉴定器长这样:  (关键词:discriminator, case, javaType, column)
+    <discriminator javaType="int" column="draft">
+    	<case value="1" resultType="DraftPost"/>
+    </discriminator>
+
+应用时长这样:
+    <resultMap id="vehicleResult" type="Vehicle">
+        <id property="id" column="id" />
+        <result property="vin" column="vin"/>
+        <result property="year" column="year"/>
+        <result property="make" column="make"/>
+        <result property="model" column="model"/>
+        <result property="color" column="color"/>
+        <discriminator javaType="int" column="vehicle_type">
+            <case value="1" resultMap="carResult"/>
+            <case value="2" resultMap="truckResult"/>
+            <case value="3" resultMap="vanResult"/>
+            <case value="4" resultMap="suvResult"/>
+        </discriminator>
+    </resultMap>
+
+上边鉴定器中引用的其他resultMap长这样:
+	<resultMap id="carResult" type="Car">
+		<result property="doorCount" column="door_count" />
+	</resultMap>
+
+这里有一个问题,这些resultMap中只映射了car中的属性,vehicle中的属性没有映射?
+
+那么使用extends属性!(关键词: extends)
+	<resultMap id="carResult" type="Car" extends="vehicleResult">
+		<result property="doorCount" column="door_count" />
+	</resultMap>
+
+这样就包含了vehicle中的映射关系了!
+
+可是外部定义的映射太麻烦了,要写一大堆<resultMap>,能不能再简单点?
+	<resultMap id="vehicleResult" type="Vehicle">
+		<id property="id" column="id" />
+		<result property="vin" column="vin"/>
+		<result property="year" column="year"/>
+		<result property="make" column="make"/>
+		<result property="model" column="model"/>
+		<result property="color" column="color"/>
+		<discriminator javaType="int" column="vehicle_type">
+			<case value="1" resultType="carResult">
+				<result property="doorCount" column="door_count" />
+			</case>
+			<case value="2" resultType="truckResult">
+				<result property="boxSize" column="box_size" />
+				<result property="extendedCab" column="extended_cab" />
+			</case>
+			<case value="3" resultType="vanResult">
+				<result property="powerSlidingDoor" column="power_sliding_door" />
+			</case>
+			<case value="4" resultType="suvResult">
+				<result property="allWheelDrive" column="all_wheel_drive" />
+			</case>
+		</discriminator>
+	</resultMap>
+
+像这样直接把子类独有的映射关系写到每个<case>标签体内,就不用单独为每个子类写resultMap啦!也不用使用extends属性了!
+
+

@@ -1,0 +1,40 @@
+自动映射如何工作?
+    MyBatis会获取结果中返回的列名,并在java类中查找相同名字的属性,并忽略两者的大小写,如果对上号了,就将列的值赋给属性.
+    数据库使用下划线分隔,Java属性使用驼峰命名法时:
+        在<settings>中,将mapUnderscoreToCamelCase设置为true即可启用自动映射
+
+在结果映射中,自动映射也能工作:
+    自动映射等级:
+        NONE: 完全禁用自动映射
+        PARTIAL: 自动匹配嵌套结果映射以外的所有属性,例如嵌套association、collection,这些属性不会自动映射
+        FULL: 自动映射所有属性(慎用,嵌套的不同实体之间 同名 的属性映射会出乱子,例如每个实体都有的id属性)
+
+属性名和字段名不一样怎么办?
+    情况一: 
+        下划线命名法和驼峰命名法的区别:
+            在<settings>中,将mapUnderscoreToCamelCase设置为true即可启用自动映射
+    情况二:
+        名字完全不一致:
+            笨方法: 手写<resultMap>,手动指定映射规则
+            好方法: 查询语句中起别名. 例如: SELECT user_id AS id, password AS pwd FROM ......
+
+例子:
+    <select id="selectUsers" resultMap="userResultMap">
+    select
+        user_id             as "id",
+        user_name           as "userName",
+        hashed_password
+    from some_table
+    where id = #{id}
+    </select>
+
+    <!-- 手动指定了password的映射,其他属性交给MyBatis自动映射 -->
+    <resultMap id="userResultMap" type="User">
+    <result property="password" column="hashed_password"/>
+    </resultMap>
+
+注意:
+    关于PARTIAL:
+        嵌套SELECT查询本来就不需要显式地写映射关系=,= (逃...
+        嵌套结果查询不会自动映射(比如association, collection)
+    

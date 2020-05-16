@@ -1,0 +1,13 @@
+StringRedisTemplate继承RedisTemplate
+
+RedisTemplate需要在配置类中注册到IOC容器才能使用,
+而StringRedisTemplate会被SpringBoot自动注册到IOC容器,不用手动注册,直接@AutoWired就能拿来用
+
+区别:
+    序列化器:
+        StringRedisTemplate: key,value,hashKey,hashValue序列化器都是StringRedisSerializer
+        RedisTemplate: 默认全部都是JdkSerializationRedisSerializer
+
+什么时候用StringRedisTemplate?
+    只操作字符串,存取都是字符串,不做任何数据转换时使用StringRedisTemplate.(也可以先转换成字符串再存,但取出的也全是字符串了)
+    其他情况用RedisTemplate

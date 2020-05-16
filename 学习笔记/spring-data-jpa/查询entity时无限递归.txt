@@ -1,0 +1,46 @@
+
+为什么会出现无限递归?
+    一对多或多对多中的情况下会出现无限递归.
+    现在假设有2个entity, User和Role,是多对多关系,User中维护了Role的List,Role中也维护了User的List.
+    那么在把User或Role转换成JSON或toString()的时候,因为你中有我,我中有你,导致无限递归.
+
+根据是否使用JSON,会造成两种状况:
+下面是两种不靠谱的解决方法,靠谱的看最下边总结
+情况一:
+    Controller方法返回JSON数据:
+        即使用了@ResponseBody或@RestController
+        现象:
+            1.返回到前端巨长无比的json串,内容重复.
+            2.控制台报错,StackOverflowError异常
+        原因:
+            entity转JSON时,两个entity之间无限递归
+        解决:
+            在会造成无限递归的属性上加Jackson的注解,@JsonIgnore,@JsonBackReference均可
+            *这俩注解具体效果暂不清楚,抽时间搞定*
+情况二:
+    Controller方法使用解析URL
+        即方法返回String格式URL或ModelAndView
+        现象:
+            1.可能控制台不会报错!需要打断点,查看变量,是否抛出StackOverflowError.
+            2.如果有,可以看到,是toString()方法抛出异常,证明了是toString()是无限递归导致内存溢出
+        原因:
+            客户端响应时要把entity带到前端,
+            但请求和响应都只能携带String格式数据,
+            所以entity实际上是被转换成String格式(toString())然后随响应发送到前端.
+            结果调用toString()时发生无限递归
+        解决:
+            使用Lombok的话:
+                在Entity类上添加@ToString(exclude = {"xxx", "xxxx"}),把会造成无限递归的属性排除出toSting()方法.
+            不使用Lombok:
+                修改Entity的toString()方法,从中移除会造成无限递归的属性.
+
+总结:
+    上边两种解决方法都是治标不治本啊会,只是避免了无限递归而已,还是会查询到庞大的无用数据
+    JPA还不太会用,所以先搞一个临时的 治本方法
+    方法:
+        多对多中,使用单方维护,放弃互相维护
+        比如: Users和Roles
+                Users里维护一个List<Roles> roles;
+                Roles里不维护List<Users> users;
+            这样查询Users时可以避免Users里的roles属性顺带把其他所有的Users一并查出来.
+        

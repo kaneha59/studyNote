@@ -1,0 +1,26 @@
+
+使用mysql:
+    两种方法
+
+    一,使用useGeneratedKyes和keyProperty属性:
+        <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.entity.user">
+            insert into test (name) values (#{name})
+        </insert>
+
+    二.使用<selectKey>标签
+        <insert id="insertUser"  parameterType="com.entity.user">
+            insert into test (name) values (#{name})
+            <selectKey keyProperty="id" resultType="java.lang.Integer">
+                select LAST_INSERT_ID() as  id
+            </selectKey>
+        </insert>
+
+    总结,这样写,在执行插入语句之后,原来的entity对象中的id属性就被mybatis附上值了!
+        (注意: 插入方法的返回值还是原来的: 影响条目数)
+
+    演示:
+        System.out.println(u.getId()+"取值前");
+
+        int num = this.dao.getSqlSession().insert("insertUser",u);
+
+        System.out.println(u.getId()+"取值后"); // 执行完插入语句后,原来的user对象中id属性被附上值了

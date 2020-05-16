@@ -1,0 +1,71 @@
+结果映射: resultMap
+    负责绑定 查询结果返回的字段值和entity的属性
+    关于自动映射,参考同目录下文章<关于自动映射.txt>.
+    抽空写. 参考mybatis官方文档
+
+关联和集合:
+    关联: 一的一方用关联映射
+    集合: 多的一方用集合映射
+
+异同点: 
+    关联和集合的大部分属性都一样,只有个别差异,比如都有select,property等属性
+    不同点:
+
+嵌套关系:
+    <resultMap>
+        <association或者collection>     <--association或collection可用 属性resultMap="xxx" 来指定其他的<resultMap>作为嵌套映射关系,从而避免手动设置嵌套映射关系
+
+            <!-- 没有指定resultMap属性时,需要手动设定嵌套映射关系 -->
+            <id property="id" column="author_id"/>
+            <result property="username" column="author_username"/>
+            <result property="password" column="author_password"/>
+
+        </association或者collection>
+    </resultMap>
+
+    <其他resultMap>
+        ......
+    </其他resultMap>
+
+关联: association
+    基本属性:
+        property: 映射到entity中的属性名.比如Bolg中的Author属性.
+                    (Author也是一个entity,和Blog是一对多关系,所以Author是Blog的一个属性)
+        javaType: 映射的entity属性的类型.值是完全限定名或别名.
+                    如果映射JavaBean,则MyBatis可以推断类型,省略javaType也行.但是如果映射HashMap这种,那就需要明确声明javaType属性
+        jdbcType: 暂不清楚,可以查看mybatis官方文档
+        typeHandler: 可以覆盖默认的类型处理器.值是类型处理器的全限定名或别名.
+
+    嵌套SELECT查询的相关属性:
+        column: 给嵌套的<select>传参用,值是字段名.
+                    如果需要传多个参数,可以使用 column="{prop1=col1,prop2=col2}"
+                    prop1,prop2是<select>标签内的参数名,比如#{prop1}, #{prop2}
+                    col1,col2是数据库中的字段名
+        select: 指定嵌套的<select>标签,值是被嵌套的<select>的id
+        fetchType: 值是lazy或eager.指定加载策略,设定fetchType属性后,将覆盖全局配置参数lazyLoadingEnabled
+
+    嵌套结果映射:
+        resultMap: 指定嵌套的<resultMap>,值是id.
+        columnPrefix: 给嵌套的<resultMap>中映射的lolumn属性加上指定前缀,作用不明啊啊啊啊啊啊
+                        参考这个然后自己敲代码试试具体啥作用 : http://www.mybatis.cn/archives/829.html
+        notNullColumn: 默认情况下，在至少一个被映射到属性的列不为空时，子对象才会被创建。 
+                        你可以在这个属性上指定非空的列来改变默认行为，指定后，Mybatis 将只在这些列非空时才创建一个子对象。
+                        可以使用逗号分隔来指定多个列。默认值：未设置（unset）
+        autoMapping: 和<select>, <resultMap>元素冲突.为本结果映射开启或者关闭自动映射
+        嵌套结果映射有两种用法:
+            用法一:
+                使用resultMap属性,指定外部引入的<resultMap>
+            用法二:
+                不使用resultMap属性,直接在<association>标签体内定义映射(使用<id>,<result>等元素)
+
+集合: collection 
+        属性和association几乎完全一样!
+    多了一个基本属性:
+        ofType: 是entity类型. 在collection中,javaType指定集合类型,比如arrayList,hashMap等
+                    因为collection是多的一方,所以返回(java)集合,内装entity类型(即ofType)
+
+association和collection的使用实例:
+    参考MyBatis官方文档.
+
+集合的多结果集/关联的多结果集(ResultSet)
+    不懂,以后找时间搞明白

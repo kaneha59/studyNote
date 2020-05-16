@@ -1,0 +1,6 @@
+
+
+<!-- 傻逼传参方法 -->
+<!-- <p th:onclick="'deleteUser(' + ${user?.id} + ',' + ${userStat.index} + ')'">删除用户</p> -->
+<!-- 正常传参方法 -->
+<p th:onclick="|deleteUser(${user?.id}, ${userStat.index})|">删除用户</p>

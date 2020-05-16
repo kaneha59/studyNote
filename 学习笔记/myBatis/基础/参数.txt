@@ -1,0 +1,15 @@
+平常就用
+
+#{id}, #{user}
+
+这种就够了
+
+然而,参数中还可以设置其他属性...
+
+比如,
+
+#{property,javaType=int,jdbcType=NUMERIC}
+
+具体先不讲,知道这么回事儿就行,以后抽空完善
+
+可以参考官方文档: https://mybatis.org/mybatis-3/zh/sqlmap-xml.html
