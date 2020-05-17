@@ -8,13 +8,13 @@
     原子性:
         一个事务被视为一个不可分割的最小单元,要么全部成功提交,要么失败全部回滚,不可能只执行其中的一部分操作
     一致性:
-        事务总是从一个一致性的状态转换到另一个一致性的状态.不会因为事务部分成功部分失败导致数据库处于不一致的状态
+        事务总是从一个一致性的状态转换到另一个一致性的状态.不会因为事务部分成功部分失败导致数据库处于不一致的状态(比如转账到一半程序崩溃导致钱凭空消失)
     隔离性:
         事务在最终提交以前,对其他事务是不可见的.一共有4种隔离级别
     持久性:
         一旦事务提交,所作的修改就会永久保存到数据库中.即便此时系统崩溃,也不会造成数据丢失       
 
-ISOLATION   --隔离级别
+ISOLATION (隔离级别)
         ***隔离级别主要涉及事务并发时的处理逻辑***
     读未提交
         事务中可以读取到其他事务未提交的记录
@@ -32,3 +32,76 @@ ISOLATION   --隔离级别
             注: mySQL的innoDB和XtraDB存储引擎通过多版本并发控制(MVCC)解决了幻读的问题
     串行化
         强制事务串行执行.是最高的隔离级别
+
+PROPAGATION (传播行为)
+    假设有2个方法,methodA()和methodB(),methodA()内嵌套执行methodB()
+        public void methodA() {
+            before();
+            methodB();
+            after();
+        }
+        public void methodB() {
+            // do something...
+        }
+
+    下面开始介绍传播行为: (一共7种)
+
+    PROPAGATION_REQUIRED: 
+        methodA(): PROPAGATION_REQUIRED
+        methodB(): PROPAGATION_REQUIRED
+        需要事务: 
+            单独调用方法时,开启事务,若外部已经有事务,则使用外部事务.
+        举例:
+            单独执行methodB(),开启新事物.若执行methodA(),则嵌套的methodB()使用methodA()的事务
+
+    PROPAGATION_SUPPORTS: 
+        methodA(): PROPAGATION_REQUIRED
+        methodB(): PROPAGATION_SUPPORTS
+        支持事务: 
+            外部有事务则使用该事务,若外部没有事务,则非事务地执行
+        举例:
+            单独执行methodB(),则不使用事务,若执行methodA(),那么嵌套的methodB()会加入methodA()的事务.
+
+    PROPAGATION_MANDATORY:   (mandatory 强制)
+        methodA(): PROPAGATION_REQUIRED
+        methodB(): PROPAGATION_MANDATORY
+        强制事务: 
+            外部有事务则使用该事务,若外部没有事务,则抛出异常
+        举例:
+            单独执行methodB(),会抛异常,若执行methodA(),那么嵌套的methodB()会加入methodA()的事务.
+
+    PROPAGATION_NOT_SUPPORTED:
+        methodA(): PROPAGATION_REQUIRED
+        methodB(): PROPAGATION_NOT_SUPPORTED
+        不支持事务: 
+            总是非事务地执行.若外部有事务,则挂起该事务,然后以非事务的方式执行完,再恢复外部事物.
+        举例:
+            单独执行methodB(),会非事务地执行. 若执行methodA(),
+            在调用methodB()前先将methodA()的事务挂起,非事务地执行完methodB(),再恢复事务
+        
+    PROPAGATION_REQUIRES_NEW:
+        methodA(): PROPAGATION_REQUIRED
+        methodB(): PROPAGATION_REQUIRES_NEW
+        需要新事务: 
+            总是建立新事务.若外部有事务,则挂起外部事物,再新起一个事务. 内外部事务互不影响,谁提交谁的.
+        举例:
+            单独执行methodB(),会开启新事物执行. 若执行methodA(),
+            在调用methodB()时会挂起methodA()的事物,并新建一个事务.
+            methodB()事务回滚不影响methodA()事物,methodA()事物回滚也不影响methodB()事务.
+    
+    PROPAGATION_NESTED:
+        methodA(): PROPAGATION_REQUIRED
+        methodB(): PROPAGATION_NESTED
+        嵌套事务: 
+            总是会起一个事务.若外部有事务,那么外部事务回滚,内部事务也回滚.若内部事务回滚,对外部事务无影响.
+        举例:
+            单独执行methodB(),会起一个事务. 若执行methodA(),
+            在调用methodB()前先将methodA()的事务保存(setSavepoint),再起一个事务.
+            若methodB()事务回滚,对methodA()事务毫无影响.
+            若methodA()事务回滚,则连带methodB()事务一起回滚.
+        注意!: 
+            内部事务不会提交,而是随着外部事物一起提交
+        
+    PROPAGATION_NEVER
+        绝不使用事务:
+           总是非事务地执行，如果存在一个活动事务，则抛出异常。 

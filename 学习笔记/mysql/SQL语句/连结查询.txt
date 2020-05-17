@@ -1,0 +1,87 @@
+连结查询
+    为什么要使用连结(join)查询?
+        如果数据存在多个表中,要怎么用一条SELECT语句检索出数据呢?
+
+    什么是连结查询?
+        在一条SELECT语句中,关联表的查询,是连结查询
+
+    什么是关联子句:
+        类似于 表1.id = 表2.id 这种把两张表关联起来的子句,叫做关联子句.
+    
+    ON, WHERE, HAVING的区别: (ON和WHERE当然可以同时使用啦!)
+        ON: 连结条件
+        WHERE: 筛选条件
+        HAVING: 结合GROUP BY子句执行,对分组进行过滤.HAVING写法和WHERE完全一样. 
+
+连结方式:
+    最简单的连结查询:
+        FROM 表1, 表2...
+        作用: 根据WHERE子句进行多表查询
+        例: SELECT * FROM users u, roles r WHERE u.uid = r.uid
+        笛卡尔积: 
+            没有连结条件(WHERE子句)的表关系返回笛卡尔积.
+            如果不写WHERE子句,那么会查询到的行数会是表一的条目数*表二的条目数.
+
+    内部连结:
+        INNER JOIN
+        作用: 求交集
+        例: SELECT * FROM users u INNER JOIN roles r ON u.uid = r.uid
+        查询结果和上边 逗号分隔表的连结查询 效果等同
+
+        使用哪种语法?
+            建议优先使用内部连结查询,这种语法必须写ON子句,不然报错.
+            而 逗号分隔表的连结查询 不写WHERE子句也不会报错,容易出现笛卡尔积的问题
+
+    自联结(同一张表,自己连结自己):
+        例如: 
+            商品信息表有商品id,商品名,厂商id 3个字段.
+            已知商品id,查询该商品所属厂商的所有产品数据
+        可以使用子查询或连结查询
+        连结查询例子:
+            SELECT p1.prod_name, p1.prod_id
+            FROM products p1, products p2
+            WHERE p1.vend_id = p2.vend_id
+            AND   p2.prod_id = "1"
+            分析: 
+                p2.prod_id = "1": 把p2表中的数据筛选得只剩下prod_id=1的一条数据,假设为y
+                p1.vend_id = p2.vend_id: 可以理解为p1.vend_id = y.get(vend_id).
+
+    外部连结:
+        可以显示在相关表中没有关联的行,这种类型的连结成为外部连结
+
+        什么是没有关联的行:
+            不匹配ON或WHERE子句的行
+        什么是关联子句:
+            类似于 表1.id = 表2.id 这种把两张表关联起来的子句,叫做关联子句.
+        
+        左外连结:
+            LEFT OUTER JOIN (简写作 LEFT JOIN)
+            作用: 左表完全展示,右表与左表不关联的行显示为null,关联的属性正常显示.
+            图示: (N表示null,Y表示有数据)
+                    列1  列2  列3  列a  列b  列c
+                行1 Y    Y    Y    Y    Y    Y
+                行2 Y    Y    Y    N    N    N 
+                行3 Y    Y    Y    N    N    N
+        右外连结:
+            RIGHT OUTER JOIN (简写作 RIGHT JOIN)
+            作用: 和左外连结正好相反,不赘述
+
+使用带聚合函数的连结:
+    查询每个用户有多少个订单
+        SELECT u.username, count(o.uid) AS order_num
+        FROM users u INNER JOIN orders o
+        ON u.uid = o.uid
+        GROUP BY u.uid
+        分析:
+            用户和订单是一对多,用户是一,订单是多
+            而我们要查询每个用户有多少个订单,
+            那就应该以每个用户为单位分组,
+            用户id是唯一的,所以GROUP BY u.uid
+            所以SELECT 的应该是用户的字段,以及每个用户的订单数(聚合订单表中的非空字段)
+            使用count()函数来聚合订单表中的非空字段即可
+        简化分析:
+            以谁分组,谁就是一.
+            查询一的一方的字段,和多的一方非空字段的聚合
+
+count(column):
+    统计该列(column)中有值(非null)的行的个数
