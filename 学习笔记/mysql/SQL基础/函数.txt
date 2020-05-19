@@ -1,0 +1,27 @@
+聚合函数:
+    avg(): 求平均数
+    count(): 计算行数
+    max():
+    min():
+    sum(): 求总数
+
+    聚合函数中使用DISTINCT: (distinct还可以加在SELECT语句中用于行数去重,例如: SELECT DISTINCT xxx, yyy, zzz FROM ...)
+        作用: 去除重复值再计算.
+        例子:
+            SELECT avg(distinct id) FROM users;
+            SELECT count(distinct id) FROM users;
+            SELECT sum(distinct id) FROM users;
+    组合使用聚合函数:
+        例如:
+            SELECT 
+                avg(id) AS avg, 
+                count(id) AS count, 
+                sum(id) AS sum 
+            FROM users;
+
+concat(): 用于拼接查询内容
+    SELECT concat('用户名:', username, '密码:', password) FROM users;
+    返回结果是:
+    列名-->    concat('用户名:', username, '密码:', password)
+                 用户名:111111密码:111111
+                 用户名:222222密码:222222

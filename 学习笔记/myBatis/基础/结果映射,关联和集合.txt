@@ -1,7 +1,6 @@
 结果映射: resultMap
     负责绑定 查询结果返回的字段值和entity的属性
     关于自动映射,参考同目录下文章<关于自动映射.txt>.
-    抽空写. 参考mybatis官方文档
 
 关联和集合:
     关联: 一的一方用关联映射
@@ -31,7 +30,7 @@
     基本属性:
         property: 映射到entity中的属性名.比如Bolg中的Author属性.
                     (Author也是一个entity,和Blog是一对多关系,所以Author是Blog的一个属性)
-        javaType: 映射的entity属性的类型.值是完全限定名或别名.
+        javaType: 映射的java类型.
                     如果映射JavaBean,则MyBatis可以推断类型,省略javaType也行.但是如果映射HashMap这种,那就需要明确声明javaType属性
         jdbcType: 暂不清楚,可以查看mybatis官方文档
         typeHandler: 可以覆盖默认的类型处理器.值是类型处理器的全限定名或别名.
@@ -46,7 +45,7 @@
 
     嵌套结果映射:
         resultMap: 指定嵌套的<resultMap>,值是id.
-        columnPrefix: 给嵌套的<resultMap>中映射的lolumn属性加上指定前缀,作用不明啊啊啊啊啊啊
+        columnPrefix: 给嵌套的<resultMap>中映射的column属性加上指定前缀,作用不明啊啊啊啊啊啊
                         参考这个然后自己敲代码试试具体啥作用 : http://www.mybatis.cn/archives/829.html
         notNullColumn: 默认情况下，在至少一个被映射到属性的列不为空时，子对象才会被创建。 
                         你可以在这个属性上指定非空的列来改变默认行为，指定后，Mybatis 将只在这些列非空时才创建一个子对象。

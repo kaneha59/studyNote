@@ -39,7 +39,7 @@
     get <key>
         获取key的值
     getrange <key> <start> <end>
-        按照指定范围截取key的值  eg: getrange key1 0 5 ==> 截取下标为0-5之间字符串
+        按照指定下标范围截取key的值  eg: getrange key1 0 5 ==> 截取下标为0-5之间字符串
     getset <key> <value>
         给key设置新值,并返回旧值
     mget <key1> [key2...]
@@ -74,7 +74,7 @@
 
 
 散列(hash):
-    是一个域值对(field-value)集合.
+    是一个域值对(field-value)集合. 主要操作是hget,hgetall,hset,hdel,hkeys,hvals
 
     hdel <key> <field1> [field2...]
         删除key对应的散列中的一个或多个键值对
@@ -106,7 +106,7 @@
 
 
 列表(list):
-    实际上是链表
+    实际上是链表,主要操作是push,pop,lrange,lset,linsert,ltrim
 
     blpop <key1> [key2...] <timeout>
     brpop <key1> [key2...] <timeout>
@@ -150,18 +150,12 @@
 
 
 集合(Set):
-    特性: 无序, 不重复
+    特性: 无序, 不重复 主要操作: add,scard,sdiff,sismember,smembers,smove,spop,,srandmember,srem,sunion,sinter
 
     add <key> <member1> [member2...] 
         向集合添加一个或多个成员
     scard <key>
         获取集合的成员数
-    sdiff <key1> [key2...]
-        返回key1中有而其他key集合中没有的成员 !!!注意: 只返回key1中有的成员
-        相当于求差集后,再在差集结果中剔除key1集合中没有的成员,然后返回
-    sdiffstore <destination> <key1> [key2...]
-        将所有集合求差集后,剔除key1中没有的成员,然后将返回集合转存入集合<destination>中
-        destination: 目的地,终点
     sismember <key> <member>
         判断集合中是否包含该成员
     smembers <key>
@@ -174,12 +168,18 @@
         随机返回集合中的[count]个成员, 注意和pop的区别
     srem <key> <member1> [member2...]
         从集合中移除指定的若干个成员
+    sdiff <key1> [key2...]
+        返回key1中有而其他key集合中没有的成员 !!!注意: 只返回key1中有的成员
+        相当于求差集后,再在差集结果中剔除key1集合中没有的成员,然后返回
+    sdiffstore <destination> <key1> [key2...]
+        将所有集合求差集后,剔除key1中没有的成员,然后将返回集合转存入集合<destination>中
+        destination: 目的地,终点
     sunion <key1> [key2...]
         返回所有给定集合的并集(就是正常的那个并集,和sdiff那个奇葩差集效果不一样)
     sunionstore <destination> <key1> [key2...]
         将并集储存进<destination>集合中
     sinter <key1> [key2...]
-        返回集合的差集
+        返回集合的交集
     sinterstore <destination> <key1> [key2...]
         将交集存入<destination>集合中
     
@@ -195,6 +195,7 @@
                     添加和删除: 需要修改skiplist,复杂度为O(log(n))
                     查找: 直接使用hash,复杂度为O(1)
                     range操作: 复杂度一般为O(log(n))
+    主要操作: zadd,zcard,zcount,zrank,zrem,zrange,zscore,zintersotre,zunionstore
     
     zadd <key> <score1 member1> [score2 member2...]
         向有序集合添加若干个成员，或者更新已存在成员的分数
@@ -204,6 +205,16 @@
         计算在有序集合中指定区间分数的成员数
     zincrby <key> <increment> <member>
         给指定成员的分数增加<increment>
+    zrank <key> <member>
+        返回指定成员的索引/排名, (最小的是0)  注意和分数(score)区分开!
+    zrevrank <key> <member>
+        逆序返回指定成员的排名/索引(最大的是0)
+    zrem <key> <member1> [member2...]
+        移除若干个指定成员
+    zremrangebyrank <key> <start> <end>
+        移除给定索引区间内的所有成员
+    zremrangebyscore <key> <min> <max>
+        移除分数区间内的所有成员
     zrange <key> <start> <end> [withscores]
         按照索引返回索引区间内的成员,可选是否显示分数. eg: zrange zsetkey1 1 4 withscores
         返回集合按照分数值递增,分数相同则按照字典序排列
@@ -216,17 +227,7 @@
             3  (5  ==>  3<=分数<5
             -inf +inf  ==>  最小值<=分数<=最大值
         *注意和zrange的区别*
-    zrank <key> <member>
-        返回指定成员的索引/排名, (最小的是0)  注意和分数(score)区分开!
-    zrevrank <key> <member>
-        逆序返回指定成员的排名/索引(最大的是0)
-    zrem <key> <member1> [member2...]
-        移除若干个指定成员
-    zremrangebyrank <key> <start> <end>
-        移除给定索引区间内的所有成员
-    zremrangebyscore <key> <min> <max>
-        移除分数区间内的所有成员
-    zrevrang <key> <start> <end> [withscores]
+    zrevrange <key> <start> <end> [withscores]
         逆序返回索引区间内的成员
     zrevrangebyscore <key> <min> <max> [withscores] [LIMIT offset count]
         逆序返回分数区间内的成员

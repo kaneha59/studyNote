@@ -1,0 +1,31 @@
+INSERT
+    插入一行数据:
+        INSERT INTO <表名> (字段1, 字段2...) VALUES(值1, 值2...);
+
+    一次插入多行:
+        INSERT INTO 
+            <表名> (字段1, 字段2...) 
+        VALUES
+            (值1, 值2...),
+            (值1, 值2...);
+
+    降低插入语句的优先级:
+        INSERT LOW_PRIORITY INTO ...
+    
+    将查询出的数据直接插入某表: (字段必须一一对应)
+        INSERT INTO <表名> (字段1, 字段2...)
+        SELECT (字段1, 字段2...)
+        FROM ...
+
+UPDATE
+    更新数据: (set语句中可以使用子查询,用查询出的值更新数据)
+        UPDATE <表名> SET X=X, Y=Y, Z=Z WHERE ...
+
+    更新多行时部分行出错也不停止后面的更新:
+        UPDATE IGNORE <表名> ...
+
+DELETE
+    删除数据:
+        DELETE FROM <表名> WHERE ...
+    删除所有行的话有更快的操作:
+        TRUNCATE <表名>   : 实质上是直接删表,再重新建表,而不是逐行删除

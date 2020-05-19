@@ -1,22 +1,37 @@
+什么是自动映射?
+    即,自动把查询返回的结果集中的列名,一一映射到实体类中的属性上.
+
 自动映射如何工作?
-    MyBatis会获取结果中返回的列名,并在java类中查找相同名字的属性,并忽略两者的大小写,如果对上号了,就将列的值赋给属性.
-    数据库使用下划线分隔,Java属性使用驼峰命名法时:
+    无视大小写,比较结果集中的列名(column)和实体类的属性名(property),名称一致就把列值映射到实体类的属性上.
+    若数据库中的列名采用下划线分隔法命名,而实体类属性使用驼峰命名法:
         在<settings>中,将mapUnderscoreToCamelCase设置为true即可启用自动映射
 
-在结果映射中,自动映射也能工作:
+在<resultMap>中,自动映射也能工作:
     自动映射等级:
         NONE: 完全禁用自动映射
-        PARTIAL: 自动匹配嵌套结果映射以外的所有属性,例如嵌套association、collection,这些属性不会自动映射
+        PARTIAL: 自动映射 嵌套结果映射 以外的所有属性.
+                  例如<resultMap>中的属性都能自动映射但内部的<association>和<collection>中的属性不会被自动映射
         FULL: 自动映射所有属性(慎用,嵌套的不同实体之间 同名 的属性映射会出乱子,例如每个实体都有的id属性)
 
 属性名和字段名不一样怎么办?
     情况一: 
-        下划线命名法和驼峰命名法的区别:
+        下划线命名法和驼峰命名法的区别时:
             在<settings>中,将mapUnderscoreToCamelCase设置为true即可启用自动映射
     情况二:
         名字完全不一致:
             笨方法: 手写<resultMap>,手动指定映射规则
             好方法: 查询语句中起别名. 例如: SELECT user_id AS id, password AS pwd FROM ......
+
+自动映射相关设置:
+    <settings>:
+        autoMappingBehavior: NONE/PARTIAL/FULL  调整自动映射等级
+        autoMappingUnknownColumnBehavior: 配置自动映射中发现未知列时的行为(或未知属性类型)
+            NONE: 不做反应
+            WARNING: 输出警告日志'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior' 的日志等级必须设置为 WARN）
+            FAILING: 映射失败,抛出异常SqlSessionException
+        mapUnderscoreToCamelCase: TRUE/FALSE 是否开启驼峰命名自动映射
+    <resultMap>, <association>, <collection>:
+        autoMapping: 默认值是unset, 会覆盖全局属性autoMappingBehavior
 
 例子:
     <select id="selectUsers" resultMap="userResultMap">
@@ -30,7 +45,7 @@
 
     <!-- 手动指定了password的映射,其他属性交给MyBatis自动映射 -->
     <resultMap id="userResultMap" type="User">
-    <result property="password" column="hashed_password"/>
+        <result property="password" column="hashed_password"/>
     </resultMap>
 
 注意:

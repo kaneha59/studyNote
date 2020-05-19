@@ -1,0 +1,49 @@
+什么时候使用resultSets和resultSet?
+    有些数据库的存储过程可以同时返回多个结果集(对应多个java集合),那么要怎么同时接收多个结果集呢?
+    答案是使用resultSets和resultSet
+
+resultSets属性:
+    在<SELECT>标签的属性,表示该查询返回多个结果集,指定映射的结果集有哪些.
+    因为resultSets属性在调用存储过程中才会用到,所以
+        要同时指定statementType="CALLABLE",指明要调用存储过程
+
+resultSet属性:
+    在<association>或者<collection>中的属性,表示是一个结果集,对应resultSets属性中的值
+    和column, foreignColumn属性一同使用,用法看下边例子
+        column和foreignColumn一同使用,用来确定维护关系,以识别关系中的夫类型与子类型.(谁是维护方,谁是被维护方)
+            foreignColumn: 指外键.
+            column: 指外键引用的列.
+        注意: 嵌套方和被嵌套方不一定谁维护谁,所以需要foreignColumn和column来确定维护关系
+        举例: 一对一中,两边都有可能是维护方(持有外键).  但一对多中,多的一方是维护方(持有外键).
+关于维护关系: 
+    总是多的一方维护一的一方.
+
+一个例子:
+    假设存储过程执行这两条语句:
+
+        SELECT * FROM BLOG WHERE ID = #{id}
+
+        SELECT * FROM AUTHOR WHERE ID = #{id}
+
+    使用resultSets属性,指定两个resultSet接收存储过程返回的两个结果集:
+
+        <select id="selectBlog" resultSets="blogs,authors" resultMap="blogResult" statementType="CALLABLE">
+        {call getBlogsAndAuthors(#{id,jdbcType=INTEGER,mode=IN})}
+        </select>
+
+    在<association>或者<collection>中,使用resultSet属性,对应<SELECT>中resultSets指定的值
+
+        <resultMap id="blogResult" type="Blog">
+            <id property="id" column="id" />
+            <result property="title" column="title"/>
+
+            <!-- column="author_id"中author_id是Blog的属性,博客维护作者  -->
+            <!-- foreignColumn="id":  -->
+            <association property="author" javaType="Author" resultSet="authors" column="author_id" foreignColumn="id">
+                <id property="id" column="id"/>
+                <result property="username" column="username"/>
+                <result property="password" column="password"/>
+                <result property="email" column="email"/>
+                <result property="bio" column="bio"/>
+            </association>
+        </resultMap>

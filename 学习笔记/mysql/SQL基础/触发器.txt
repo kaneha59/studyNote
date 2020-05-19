@@ -1,0 +1,58 @@
+
+什么是触发器?
+    触发器与表绑定,在表发生更改时,自动触发触发器中定义的处理.
+
+触发器在什么时候触发:
+    一共可以定义在6个时间点,分别是:
+        INSERT前(BEFORE)后(AFTER)
+        UPDATE前后
+        DELETE前后
+    每个节点只能有一个触发器:
+        所以每个表最多只能定义6个触发器
+               
+创建语句:
+    CREATE TRIGGER 
+        <触发器名>     --触发器名
+    <BEFORE/AFTER> <INSERT/UPDATE/DELETE> ON 
+        users       --绑定的表名
+    FOR EACH ROW    -- 对<增/删/改>的每一行都执行触发器操作
+        BEGIN       --触发器执行内容(可以用BEGIN-END块来执行多条语句)
+            ......
+        END;  
+
+    例子:
+        CREATE TRIGGER before_insert_users
+        BEFORE INSERT ON users
+        FOR EACH ROW 
+            BEGIN
+                -- 在插入前将这行数据的username, id, 自定义值'hahah'插入3个变量中
+                -- 注意: 因为插入前不会生成id,所以此处NEW.id是默认值0,插入后才会有正确的值
+                SELECT NEW.username, NEW.id, 'hahaha' INTO @username, @id, @password;
+                -- 将即将插入的行的password值改成 'test!'
+                SET NEW.password = 'test!';
+            END;
+
+        INSERT INTO users(username, password) VALUES('wangwu', 'wangwu');   -- 插入一行数据
+        select @username, @id, @password;   -- 检索3个变量是否被正确地赋值
+        -- 插入数据之后记得查看users表,看看新插入的行的password是否变成了 'test!'
+    UPDATE和DELETE写法类似,不赘述
+
+触发器中的临时表:
+    NEW: 
+        INSERT, UPDATE的触发器中可用
+            BEFORE: 
+                INSERT: 即将插入的行的数据(id值因为插入后才生成,所以是默认值0)
+                UPDATE: 即将更新的行的数据
+            AFTER:
+                INSERT: 插入的数据
+                UPDATE: 更新的数据
+    OLD:
+        UPDATE, DELETE的触发器中可用
+            UPDATE: 这行更新前的数据
+            DELETE: 删除的数据
+
+关于触发器失败:
+    前置触发器失败: 这行增删改操作和后置触发器会被停止.
+    增删改操作失败: 后置触发器会被停止
+
+触发器不能使用CALL命令,所以触发器中不能调用存储过程,需要直接写代码

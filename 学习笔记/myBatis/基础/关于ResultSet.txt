@@ -1,2 +1,0 @@
-现在不懂,以后找时间弄明白
-    https://mybatis.org/mybatis-3/zh/sqlmap-xml.html

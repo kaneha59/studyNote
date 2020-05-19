@@ -1,0 +1,28 @@
+WHERE 关键字后可跟:
+    各种比较操作符: 
+        >  <  <>  != ...
+    BETWEEN: 
+        WHERE id BETWEEN 1 AND 10
+    IN: 表示是其中之一,也可以用作子查询
+        WHERE status IN(0, 2, 99)
+        WHERE id IN(SELECT id FROM ...)
+    EXISTS: 表示存在,exists后接其他查询子句,判断是否能查到至少一条数据
+        WHERE EXISTS (SELECT ...)
+    LIKE: 用通配符过滤查询结果,注意通配符效率较低,应该放在最后
+        %: 表示任意字符任意多个   %abc% ==> 表示包含abc的字段
+        _: 表示一个任意字符   a_c ==> 表示a什么c
+        WHERE id username 'my%' ==> 匹配以my打头的用户名
+    REGEXP: 使用正则表达式匹配
+        WHERE REGEXP '[a-z]' 
+        注意:
+            1.mysql中正则表达式使用双反斜杠(\\)转移转义
+            2.其他写法就跟 一般的正则 一致
+    AND: 用于连接多个WHERE子句,表示并且
+        WHERE id>10 AND price<500
+    OR: 用于连接多个WHERE子句,表示或者
+        WHERE id<100 OR id>999
+    NOT: 对判断句取反
+        NOT IN
+        NOT EXITSTS
+        NOT BETWEEN
+        NOT LIKE

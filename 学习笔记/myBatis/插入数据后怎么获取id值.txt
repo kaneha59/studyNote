@@ -1,8 +1,7 @@
-
 使用mysql:
     两种方法
 
-    一,使用useGeneratedKyes和keyProperty属性:
+    一,使用useGeneratedKeys和keyProperty属性:
         <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.entity.user">
             insert into test (name) values (#{name})
         </insert>

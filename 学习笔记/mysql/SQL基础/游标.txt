@@ -1,0 +1,44 @@
+什么是游标:
+    游标是被应用于存储过程内,用于操作结果集的工具.
+    游标会在打开时将检索出的结果集保存
+    (感觉可以类比是java中的集合)
+
+声明语句:
+    CREATE PROCEDURE test()     -- 游标是在存储过程内使用的
+    BEGIN
+        DECLARE <参数> <参数类型>;   -- 定义变量
+        DECLARE <游标名> CURSOR FOR SELECT aaa, bbb FROM......;  -- 定义游标
+        DECLARE CONTINUE HANDLER FOR ......;    -- 定义句柄
+        OPEN <游标名>;
+        ......
+        FETCH <游标名> INTO <变量1> [变量2...]  -- 游标中的SELECT语句查询多少个列,这里就要 INTO 多少个变量,按顺序一一对应
+        ......
+        CLOSE <游标名>;
+    END;
+
+    例子:
+        CREATE PROCEDURE test(
+            OUT u char(20),
+            OUT p char(20)
+        )
+        BEGIN
+            DECLARE done boolean DEFAULT false;     -- 控制repeat循环的变量done
+            DECLARE cursor1 CURSOR FOR          -- 定义游标
+                SELECT username, password FROM users;   
+            DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = true;  -- 定义句柄,当没有更多行可供取出时,设置done=true
+            
+            OPEN cursor1;   -- 打开游标
+            REPEAT  -- repeat循环
+            FETCH cursor1 INTO u, p;    -- 取出当前行,并赋值给变量u, p (变量数和顺序必须和游标声明中的SELECT中的列一一对应)
+            UNTIL done END REPEAT;  -- done为true时终止循环
+            CLOSE cursor1;  -- 关闭游标
+        END;
+    
+        call test(@username, @password);    -- 调用存储过程
+        select @username, @password;    -- 查询变量的值
+
+注意:
+    1.游标必须打开(OPEN)才能用(打开时才会执行游标中定义的SELECT语句,检索数据)
+    2.游标用完必须关闭
+
+关于句柄(handler), 目前不了解,以后搞定

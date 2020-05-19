@@ -1,0 +1,43 @@
+mysql 8.0 存储过程不支持 varchar ，你可以用char代替
+
+什么是存储过程?
+    为以后使用而保存的一条或多条MySQL语句的集合.
+    
+存储过程和函数的区别:
+    存储过程:
+        参数: 有in, out, inout三类参数
+        返回值: 1.可以返回多个值(通过out,inout参数) 2.也能同时返回多个结果集(SELECT语句查询的结果集)
+        调用: 存储过程必须用CALL命令单独调用
+    函数:
+        参数: 只有in参数
+        返回值: 函数必须返回值(return)
+        调用: 函数可以在其他SQL语句中被调用,可以类比avg()等函数
+
+创建存储过程:
+    DELIMITER //  -- 如果使用命令行执行,则需要临时修改分隔符.(使用管理工具运行SQL无需修改分隔符)
+    CREATE PROCEDURE <存储过程名>(<IN/OUT/INOUT> <参数名> <参数类型>)
+    BEGIN
+        ......//
+    END//
+    DELIMITER ;   -- 分隔符改回;
+
+    示例:
+        CREATE PROCEDURE test_proc(
+            OUT temp char(10)
+        )
+        BEGIN   
+            SELECT * FROM users;
+            SELECT * FROM roles;
+            SELECT u.username, r.role_name FROM users u, roles r WHERE u.id = r.id;
+            SET temp = '测试完成';
+        END;
+
+        CALL test_proc(@result);    
+            -- 传入变量@result,调用存储过程,同时返回3个结果集(3条SELECT语句)
+        SELECT @result;     -- 查询变量@result,值为"测试完成"
+
+其他语句
+    DROP PROCEDURE IF EXISTS <存储过程名>;
+
+存储过程可以嵌套存储过程
+    
