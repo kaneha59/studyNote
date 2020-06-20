@@ -1,0 +1,183 @@
+Classfile /C:/Users/kaneha/Desktop/studyNote/学习笔记/java基础/深入理解java虚拟机阅读笔记/字节码对比/Test1.class
+  Last modified 2020年5月26日; size 788 bytes
+  SHA-256 checksum d3db03f59804ad38743696a0e68c17ec29e483d919850b94a1ef21c94117656d
+  Compiled from "Test1.java"
+public class Test1
+  minor version: 0
+  major version: 58
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #8                          // Test1
+  super_class: #2                         // java/lang/Object
+  interfaces: 0, fields: 5, methods: 4, attributes: 1
+Constant pool:
+   #1 = Methodref          #2.#3          // java/lang/Object."<init>":()V
+   #2 = Class              #4             // java/lang/Object
+   #3 = NameAndType        #5:#6          // "<init>":()V
+   #4 = Utf8               java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = Fieldref           #8.#9          // Test1.aaa:I
+   #8 = Class              #10            // Test1
+   #9 = NameAndType        #11:#12        // aaa:I
+  #10 = Utf8               Test1
+  #11 = Utf8               aaa
+  #12 = Utf8               I
+  #13 = String             #14            // my name is abcc
+  #14 = Utf8               my name is abcc
+  #15 = Fieldref           #8.#16         // Test1.bbb:Ljava/lang/String;
+  #16 = NameAndType        #17:#18        // bbb:Ljava/lang/String;
+  #17 = Utf8               bbb
+  #18 = Utf8               Ljava/lang/String;
+  #19 = Class              #20            // java/util/Date
+  #20 = Utf8               java/util/Date
+  #21 = Methodref          #19.#3         // java/util/Date."<init>":()V
+  #22 = Fieldref           #8.#23         // Test1.ddd:Ljava/util/Date;
+  #23 = NameAndType        #24:#25        // ddd:Ljava/util/Date;
+  #24 = Utf8               ddd
+  #25 = Utf8               Ljava/util/Date;
+  #26 = Long               2222222222l
+  #28 = Fieldref           #8.#29         // Test1.codeBlock:J
+  #29 = NameAndType        #30:#31        // codeBlock:J
+  #30 = Utf8               codeBlock
+  #31 = Utf8               J
+  #32 = String             #33            // hello World!
+  #33 = Utf8               hello World!
+  #34 = Integer            987654321
+  #35 = Fieldref           #8.#36         // Test1.staticInt:I
+  #36 = NameAndType        #37:#12        // staticInt:I
+  #37 = Utf8               staticInt
+  #38 = Integer            99999
+  #39 = Utf8               Code
+  #40 = Utf8               LineNumberTable
+  #41 = Utf8               (ILjava/lang/String;)V
+  #42 = Utf8               aaaTest
+  #43 = Utf8               <clinit>
+  #44 = Utf8               SourceFile
+  #45 = Utf8               Test1.java
+{
+  protected java.lang.String bbb;
+    descriptor: Ljava/lang/String;
+    flags: (0x0004) ACC_PROTECTED
+
+  public java.util.Date ddd;
+    descriptor: Ljava/util/Date;
+    flags: (0x0001) ACC_PUBLIC
+
+  static int staticInt;
+    descriptor: I
+    flags: (0x0008) ACC_STATIC
+
+  long codeBlock;
+    descriptor: J
+    flags: (0x0000)
+
+  Test1();
+    descriptor: ()V
+    flags: (0x0000)
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: sipush        567
+         8: putfield      #7                  // Field aaa:I
+        11: aload_0
+        12: ldc           #13                 // String my name is abcc
+        14: putfield      #15                 // Field bbb:Ljava/lang/String;
+        17: aload_0
+        18: new           #19                 // class java/util/Date
+        21: dup
+        22: invokespecial #21                 // Method java/util/Date."<init>":()V
+        25: putfield      #22                 // Field ddd:Ljava/util/Date;
+        28: aload_0
+        29: ldc2_w        #26                 // long 2222222222l
+        32: putfield      #28                 // Field codeBlock:J
+        35: aload_0
+        36: sipush        789
+        39: putfield      #7                  // Field aaa:I
+        42: aload_0
+        43: ldc           #32                 // String hello World!
+        45: putfield      #15                 // Field bbb:Ljava/lang/String;
+        48: aload_0
+        49: pop
+        50: ldc           #34                 // int 987654321
+        52: putstatic     #35                 // Field staticInt:I
+        55: return
+      LineNumberTable:
+        line 13: 0
+        line 6: 4
+        line 7: 11
+        line 8: 17
+        line 25: 28
+        line 14: 35
+        line 15: 42
+        line 16: 48
+        line 17: 55
+
+  Test1(int, java.lang.String);
+    descriptor: (ILjava/lang/String;)V
+    flags: (0x0000)
+    Code:
+      stack=3, locals=3, args_size=3
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: sipush        567
+         8: putfield      #7                  // Field aaa:I
+        11: aload_0
+        12: ldc           #13                 // String my name is abcc
+        14: putfield      #15                 // Field bbb:Ljava/lang/String;
+        17: aload_0
+        18: new           #19                 // class java/util/Date
+        21: dup
+        22: invokespecial #21                 // Method java/util/Date."<init>":()V
+        25: putfield      #22                 // Field ddd:Ljava/util/Date;
+        28: aload_0
+        29: ldc2_w        #26                 // long 2222222222l
+        32: putfield      #28                 // Field codeBlock:J
+        35: aload_0
+        36: iload_1
+        37: putfield      #7                  // Field aaa:I
+        40: aload_0
+        41: aload_2
+        42: putfield      #15                 // Field bbb:Ljava/lang/String;
+        45: return
+      LineNumberTable:
+        line 19: 0
+        line 6: 4
+        line 7: 11
+        line 8: 17
+        line 25: 28
+        line 20: 35
+        line 21: 40
+        line 22: 45
+
+  public void aaaTest();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: dup
+         2: getfield      #7                  // Field aaa:I
+         5: aload_0
+         6: getfield      #7                  // Field aaa:I
+         9: iadd
+        10: putfield      #7                  // Field aaa:I
+        13: return
+      LineNumberTable:
+        line 29: 0
+        line 30: 13
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=1, locals=0, args_size=0
+         0: ldc           #38                 // int 99999
+         2: putstatic     #35                 // Field staticInt:I
+         5: return
+      LineNumberTable:
+        line 10: 0
+}
+SourceFile: "Test1.java"

@@ -36,14 +36,6 @@
 
     set <key> <value>
         设置指定key的值
-    get <key>
-        获取key的值
-    getrange <key> <start> <end>
-        按照指定下标范围截取key的值  eg: getrange key1 0 5 ==> 截取下标为0-5之间字符串
-    getset <key> <value>
-        给key设置新值,并返回旧值
-    mget <key1> [key2...]
-        一次获取多个key的值
     setex <key> <seconds> <value>
         设置指定key的值同时设置过期时间 (set命令也可以通过加 ex参数的方式达到同样效果)
     psetex <key> <millisecondes> <value>
@@ -52,12 +44,20 @@
         key不存在时才设置该键值对
     setrange <key> <offset> <value>
         用value参数,从offset偏移量开始,覆盖原值 eg: set key1 myname;    setrange key1 2 boy;  ==> *值由myname变为myboye*
-    strlen <key>
-        返回key对应的字符串的长度
     mset <key> <value> [<key> <value>...]
         批量设置键值对
     msetnx <key> <value> [<key> <value>...]
         当且仅当所有给定key都不存在时,批量设置键值对
+    get <key>
+        获取key的值
+    getrange <key> <start> <end>
+        按照指定下标范围截取key的值  eg: getrange key1 0 5 ==> 截取下标为0-5之间字符串
+    getset <key> <value>
+        给key设置新值,并返回旧值
+    mget <key1> [key2...]
+        一次获取多个key的值
+    strlen <key>
+        返回key对应的字符串的长度
     incr <key>
         将key存储的数字增加1
     incrby <key> <increment>
@@ -84,12 +84,10 @@
         获取哈希表中指定field的值
     hgetall <key>
         获取指定散列(key)中所有键值对(键和值都显示)
-    hincrby <key> <field> <increment>
-        给指定散列中指定field的整数值增加increment
-    hincrbyfloat <key> <field> <increment>
-        给指定散列中指定field的浮点数值增加increment
     hkeys key
         获取指定散列(key)中的所有field
+    hvals <key>
+        获取散列中的所有值
     hlen <key>
         获取指定散列中field的数量
     hmget <key> <field1> [field2...]
@@ -100,8 +98,10 @@
         给指定散列中field的值设置为value
     hsetnx <key> <field value>
         当指定散列中指定field不存在时,新增一个field-value对
-    hvals <key>
-        获取散列中的所有值
+    hincrby <key> <field> <increment>
+        给指定散列中指定field的整数值增加increment
+    hincrbyfloat <key> <field> <increment>
+        给指定散列中指定field的浮点数值增加increment
 
 
 
@@ -142,6 +142,7 @@
         count = 0: 移除列表中所有与value相等的值
         count > 0: 从表头开始移除列表中count个与value相等的元素
         count < 0: 从表尾开始,移除列表中count的绝对值个与value相等的元素
+        正负指定头尾,数值指定个数
     lset <key> <index> <value>
         通过索引设置列表元素的值
     ltrim <key> <start> <end>
@@ -165,7 +166,7 @@
     spop <key> [count]
         随机弹出集合中[count]个成员
     srandmember <key> [count]
-        随机返回集合中的[count]个成员, 注意和pop的区别
+        随机返回集合中的[count]个成员, 注意和pop的区别,这个不是弹出
     srem <key> <member1> [member2...]
         从集合中移除指定的若干个成员
     sdiff <key1> [key2...]
@@ -205,6 +206,8 @@
         计算在有序集合中指定区间分数的成员数
     zincrby <key> <increment> <member>
         给指定成员的分数增加<increment>
+    zscore <key> <member>
+        返回指定成员的分数值(score)
     zrank <key> <member>
         返回指定成员的索引/排名, (最小的是0)  注意和分数(score)区分开!
     zrevrank <key> <member>
@@ -231,8 +234,6 @@
         逆序返回索引区间内的成员
     zrevrangebyscore <key> <min> <max> [withscores] [LIMIT offset count]
         逆序返回分数区间内的成员
-    zscore <key> <member>
-        返回指定成员的分数值(score)
     zinterstore <destination> <keysnum> <key1> [key2...]
         求<keysnum>个有序集合的交集,并保存结果到<destination>集合中.交集的分数是各个集合中该元素的score相加
     zunionstore <destination> <keysnum> <key1> [key2...]

@@ -1,0 +1,45 @@
+/*
+ Navicat Premium Data Transfer
+
+ Source Server         : myDB
+ Source Server Type    : MySQL
+ Source Server Version : 80019
+ Source Host           : localhost:3306
+ Source Schema         : simpleproject
+
+ Target Server Type    : MySQL
+ Target Server Version : 80019
+ File Encoding         : 65001
+
+ Date: 20/05/2020 11:01:27
+*/
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for test1
+-- ----------------------------
+DROP TABLE IF EXISTS `test1`;
+CREATE TABLE `test1`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `class` int(0) NOT NULL,
+  `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `score` int(0) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of test1
+-- ----------------------------
+INSERT INTO `test1` VALUES (1, 1, 'ali', 5);
+INSERT INTO `test1` VALUES (2, 1, 'banana', 6);
+INSERT INTO `test1` VALUES (3, 1, 'canada', 8);
+INSERT INTO `test1` VALUES (4, 2, 'delta', 4);
+INSERT INTO `test1` VALUES (5, 3, 'ecfa', 8);
+INSERT INTO `test1` VALUES (6, 2, 'fun', 4);
+INSERT INTO `test1` VALUES (7, 3, 'google', 7);
+INSERT INTO `test1` VALUES (8, 2, 'hello', 3);
+INSERT INTO `test1` VALUES (9, 3, 'idea', 9);
+
+SET FOREIGN_KEY_CHECKS = 1;

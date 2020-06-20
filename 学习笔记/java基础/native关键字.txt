@@ -1,0 +1,12 @@
+native主要用于方法上
+
+1、一个native方法就是一个Java调用非Java代码的接口。一个native方法是指该方法的实现由非Java语言实现，比如用C或C++实现。
+
+2、在定义一个native方法时，并不提供实现体（比较像定义一个Java Interface），因为其实现体是由非Java语言在外面实现的
+
+主要是因为JAVA无法对操作系统底层进行操作，但是可以通过jni(java native interface)调用其他语言来实现底层的访问。
+
+作者：Chaop
+链接：https://www.jianshu.com/p/429dc9aa2ce4
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。

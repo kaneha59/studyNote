@@ -1,0 +1,32 @@
+https://www.jianshu.com/p/95970b089360
+
+简单了解java动态代理
+需要了解java.lang.reflect包下的几个类:
+    Proxy: 使用newProxyInstance()静态方法创建代理对象
+        public static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h) {...}
+            loader: 被代理类的类加载器
+            interfaces: 被代理类实现的接口数组
+            h: InvocationHandler接口的实例(使用Lambda表达式)
+    InvocationHandler: 只有一个invoke方法
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable;
+            proxy: 调用该方法的代理实例
+            method: 对象被调用的方法
+            args: 调用时的参数
+    Method: final修饰的类,可以用invoke()来调用指定实例的方法
+        public Object invoke(Object obj, Object... args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{...}
+
+动态代理流程:
+    1.使用Proxy的静态方法newProxyInstance(),传入 被代理对象的类加载器, 实现接口 和InvocationHandler实例
+    2.使用Lambda编写InvocationHandler实例
+        1).在method.invoke(obj, args)前后编写代码,可以给代理对象的方法添加 前置/后置通知.
+            (被代理对象的每一个方法都会走method.invoke(), 所以可以使用if判断,针对不同的方法添加不同的通知)
+        2).使用method.getName()方法可以获取当前方法的方法名,可以使用equals()判断当前是什么方法,针对不同方法添加不同的通知.
+
+了解了java动态代理的原理,我们可以总结出:
+    Test类下有a()和b()两个方法, a()方法中调用了b()方法, 给Test类创建了代理对象并添加了通知.
+        那么运行a()方法时,里边的b()方法不会触发b()方法的通知.(原理看上边的method.invoke())
+    举一反三:
+        service层中的方法不要互相调用,会导致被嵌套方法的通知失效(比如事务, 缓存注解).不过其他service层的方法可以正常调用.
+
+动态代理的局限:
+    被代理的类必须实现接口.不实现接口则无法代理.

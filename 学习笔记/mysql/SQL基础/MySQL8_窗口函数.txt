@@ -1,0 +1,69 @@
+先看个例子
+    -- test1表有id,class, name, score 4个列
+        结构和数据SQL文在 /结构和数据SQL/test1.txt
+    SELECT
+        *,
+        sum(score) OVER(PARTITION BY class ORDER BY id) AS runningTotal_score
+    FROM test1;
+
+    这条SQL的意思是:
+        以class列分组,按照id排序,每行查询一次sum(score)
+    结果如下:
+        id      class   name        score   runningTotal_score
+        1	    1	    ali	        5	    5
+        2	    1	    banana	    6	    11
+        3	    1	    canada	    8	    19
+        4	    2	    delta	    4	    4
+        6	    2	    fun	        4	    8
+        8	    2	    hello	    3	    11
+        5	    3	    ecfa	    8	    8
+        7	    3	    google	    7	    15
+        9	    3	    idea	    9	    24
+        --- 分割线 ---
+        观察结果如下:
+            class列: 
+                可以看到 "PARTITION BY class" 起到作用了,结果集以class列分组.
+            id列: 
+                在以class列分组的前提下,可以看出id在每个分组由小到大排列. 说明"ORDER BY id"起作用了.
+            runningTotal_score: 
+                在class列分组下,每行叠加score值,切换分组则重新计算
+        总结:
+            1.窗口函数可以以 分组内第一行到当前行的数据(records) 为基础,进行指定的函数运算. 
+            2.窗口函数中每个分组都分开计算,互不影响.
+
+问题:
+    窗口函数具有分组(PARTITION BY)和排序(ORDER BY)的功能,那么跟平常用的GROUP BY, ORDER BY有什么异同呢?
+        首先是分组:
+            PARTITION BY 不会影响结果的行数,原本有多少行就显示多少行.
+            GROUP BY 会按照分组聚合,每组只有1行,结合聚合函数使用.
+        然后是排序:
+            窗口函数中的ORDER BY 会在每个分组内排序.
+            非窗口函数的ORDER BY 是给整个结果集排序.
+
+窗口函数的语法结构如下:
+    函数名(参数) OVER([PARTITION BY xx] [ORDER BY yy] [FRAME框架定义])
+        关于[FRAME框架定义]: 目前不会,以后抽时间掌握
+            参考:
+                官方参考手册: https://dev.mysql.com/doc/refman/8.0/en/window-functions-frames.html
+                CSDN文章: https://blog.csdn.net/qq_41080850/article/details/86416248
+
+    窗口函数一般在SELECT语句中作为查询的列来定义.
+
+窗口函数中可以使用什么函数?
+    聚合函数:
+        sum(), count(), max(), min(), avg().上边用sum()为例已经介绍过,不再赘述
+    窗口函数专用函数:
+        假设有3个分数,分别是98, 98, 100,分别用下边的函数给这三个分数排序
+        rank(): 按照OVER(ORDER BY xx)中的ORDER BY列来排序,序号是1, 1, 3
+        dense_rank(): 序号是1, 1, 2
+        row_number(): 序号是1, 2, 3.完全按照行数排序,不考虑并列的情况
+        SQL例子:
+            SELECT 
+                *,
+                rank() OVER(ORDER BY score ASC) AS running_rank,
+                dense_rank() OVER(ORDER BY score DESC) AS running_dense_rank,
+                row_number() OVER(ORDER BY score DESC) AS running_row_number
+            FROM `test1`
+
+窗口函数应用场景举例:
+    给表中的数据排名.

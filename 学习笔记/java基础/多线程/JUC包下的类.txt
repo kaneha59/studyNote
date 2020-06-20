@@ -1,0 +1,8 @@
+Executors
+    提供了一系列工厂方法用于创建线程池，返回的线程池都实现了ExecutorService接口
+
+
+
+
+推荐文章:
+https://blog.csdn.net/tongdanping/article/details/79604637

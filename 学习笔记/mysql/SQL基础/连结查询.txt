@@ -12,6 +12,9 @@
         ON: 连结条件
         WHERE: 筛选条件
         HAVING: 结合GROUP BY子句执行,对分组进行过滤.HAVING写法和WHERE完全一样. 
+    USING:
+        USING等价与JOIN操作中的ON,如果a表和b表根据相同的字段id关联,那么
+            USING(id)   ===>   ON a.id = b.id
 
 连结方式:
     最简单的连结查询:

@@ -1,0 +1,7 @@
+1.在定时任务的类上加注解@EnableScheduling
+2.在执行方法上加注解@Scheduled
+
+@Scheduled有三个参数可选择
+    fixedDelay: 以上一次方法执行完时开始计时
+    fixedRate: 从上一次方法开始的时间计时
+    cron表达式: 定制化执行任务,但是执行的方式是与fixedDelay相近的，也是会按照上一次方法结束时间开始算起
