@@ -75,6 +75,7 @@
 
 散列(hash):
     是一个域值对(field-value)集合. 主要操作是hget,hgetall,hset,hdel,hkeys,hvals
+    (redis对hash都是针对一个key下的field-value对进行操作的,不会同时操作多个key，注意区分hash批量操作和String批量操作的区别)
 
     hdel <key> <field1> [field2...]
         删除key对应的散列中的一个或多个键值对
@@ -84,7 +85,7 @@
         获取哈希表中指定field的值
     hgetall <key>
         获取指定散列(key)中所有键值对(键和值都显示)
-    hkeys key
+    hkeys <key>
         获取指定散列(key)中的所有field
     hvals <key>
         获取散列中的所有值
@@ -92,7 +93,7 @@
         获取指定散列中field的数量
     hmget <key> <field1> [field2...]
         获取所有给定field的值
-    hmset <key1 value1> [key2 value2...]
+    hmset <key> <field1 value1> [field2 value2...]
         同时将多个 field-value (域-值)对设置到散列 key 中
     hset <key> <field value>
         给指定散列中field的值设置为value
@@ -112,7 +113,7 @@
     brpop <key1> [key2...] <timeout>
         这两个可以实现'阻塞读取'(重要)和'分优先级任务队列'
         从(头部/底部)弹出一个元素,若当前key中已经没有元素,则弹出下一个key的元素
-        如果所有key中都没有元素,则阻塞队列,知道超时或发现可弹出元素为止!
+        如果所有key中都没有元素,则阻塞队列,直到超时或发现可弹出元素为止!
     brpoplpush <source> <destination> <timeout>
         从前一个列表的底部弹出一个元素,并插入到后一个列表的顶部,且返回该元素.若列表中没有元素则阻塞列表知道等待超时或发现可弹出元素为止
     rpoplpush <source> <destination>
