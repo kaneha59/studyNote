@@ -121,7 +121,8 @@
     lindex <key> <index>
         通过索引获取列表中的元素
     linsert <key> before/after <pivot> <value>
-        在pivot的 前/后 插入value linsert listkye1 before 'home' 'my'
+        在pivot的 前/后 插入一个元素, <pivot>是目标元素，若<pivot>不存在,则不执行操作
+        eg: linsert listkey1 before 'home' 'my'  在listkey1列表中的'home'元素前边插入元素'my'
         pivot: 指点,轴心
     llen <key>
         获取列表长度
