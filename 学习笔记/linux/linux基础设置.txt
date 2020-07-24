@@ -1,0 +1,9 @@
+1.修改分辨率
+    vim /boot/grub2/grub.cfg
+    在最末尾添加一行vga=0x367    (367是1920*1080*32)
+    具体分辨率与数值的关联关系参考https://www.cnblogs.com/evai/p/5988488.html
+
+2.开启鼠标支持
+    yum install gpm*   #安装gpm
+    service gpm start  #启动gpm服务
+    systemctl enable gpm.service  #设置gpm服务开机自启动

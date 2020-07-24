@@ -1,0 +1,9 @@
+systemctl: 是系统服务管理器指令,实际上是service和chkconfig这两个命令组合到一起
+    systemctl enable <服务名>: 使某服务开机自动启动
+    systemctl disable <服务名>: 关闭某服务的开机自动启动
+    systemctl status <服务名>: 查看某服务的运行状态
+    systemctl list-units --type=service: 显示所有已启动的服务
+    systemctl start <服务名>: 启动服务
+    systemctl stop <服务名>: 关闭服务
+    systemctl restart <服务名>: 重启服务
+
