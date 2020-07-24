@@ -1,9 +1,27 @@
-1、查看firewall服务状态
-    systemctl status firewalld
+firewalld是一款防火墙管理工具,有基于CLI(命令行界面)和基于GUI(图形用户界面)的两种管理方式.
+命令模板: firewall-cmd <参数> [--permanent]
+    ***先介绍几个重要参数***
+        --permanent: 持久化策略配置.不加这个参数就更改的策略配置,更改会在firewalld重启后失效
+                                   加上这个参数后更改配置,更改需要在重启firewalld后才生效
+        --reload: 重新加载策略配置.
 
+一.firewalld加入了区域的概念(zone),简单来说,区域就是firewalld防火墙预先准备的几套防火墙策略模板,可以根据不同场景选择合适的策略
+    1.关于区域的参数
+        --get-default-zone: 获取默认的区域名
+        --set-default-zone: 设置默认区域
+        --get-active-zones: 显示当前正在使用的区域和网卡名称
+        --get-zones: 显示所有可用的区域
 
-2、查看firewall的状态
-    firewall-cmd --state
+    2.其他参数
+        --state: 查看firewall的状态
+        --list-all: 列出当前区域的配置信息,例如:网卡,资源,端口以及服务等信息
+        --query-port=3306/tcp: 查询端口是否开放
+        --add-port=3306/tcp: 添加端口
+        --remove-port=3306/tcp: 移除端口
+        --add-forward-port=port=80:proto=tcp:toport=21:toaddr=192.168.1.1: 设置端口映射,多个参数用冒号分隔,分别是 "端口:协议:映射端口:映射地址"
+        --remove-forward-port=port=80:proto=tcp:toport=21:toaddr=192.168.1.1: 移除端口映射,参数同上
+        --query-forward-port=port=80:proto=tcp:toport=21:toaddr=192.168.1.1: 查询该端口转发是否被添加(可以直接用--list-all查看所有端口转发配置)
+
 3、开启、重启、关闭、firewalld.service服务
     # 开启
     service firewalld start
@@ -11,19 +29,9 @@
     service firewalld restart
     # 关闭
     service firewalld stop
-4、查看防火墙规则
-    firewall-cmd --list-all
-5、查询、开放、关闭端口
-    # 查询端口是否开放
-    firewall-cmd --query-port=3306/tcp  (返回no的话,确认修改端口后是否重启防火墙服务!不重启不生效)
-    # 开放80端口
-    firewall-cmd --permanent --add-port=3306/tcp(修改设定后一定要重启)
-    # 移除端口
-    firewall-cmd --permanent --remove-port=3306/tcp
-    #重启防火墙(修改配置后要重启防火墙)
-    firewall-cmd --reload
+
+
 
 # 参数解释
 1、firwall-cmd：是Linux提供的操作firewall的一个工具；
 2、--permanent：表示设置为持久；
-3、--add-port：标识添加的端口；
