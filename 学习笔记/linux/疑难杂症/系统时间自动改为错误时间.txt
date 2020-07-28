@@ -1,0 +1,7 @@
+问题核心: 时区错误,即使修改时间也会自动改为错误时区的时间
+(主板时间也会被改为错误(时区)的时间)
+涉及命令: timedatectl     tzselect    date    等等
+
+预计补全时间: 明天(7月29日)
+命令参考:
+https://blog.csdn.net/weixin_34208283/article/details/92569178
