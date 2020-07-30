@@ -7,3 +7,20 @@
     yum install gpm*   #安装gpm
     service gpm start  #启动gpm服务
     systemctl enable gpm.service  #设置gpm服务开机自启动
+
+3.安装vmware tools
+    1.以root用户登入centos7,然后点击菜单栏 虚拟机->安装VMware tools. 之后会在/dev 下生成/cdrom
+    2.创建文件夹 /mnt/cdrom ,执行 [mount /dev/cdrom /mnt/cdrom] 手动挂载cdrom到/mnt/cdrom目录下
+    3.进入/mnt/cdrom,将VMwareTools-10.xxxxx.tar.gz复制到家目录 [cp VMwaretools-10.xxxx.tar.gz]
+    4.安装gcc和uek kernel ==> [yum install gcc*] [yum install kernel*] [yum install kernel-devel]
+    5.解压VMwareTools-10.xxxxx.tar.gz, [tar -zxvf VMwareTools-10.xxxxx.tar.gz],进入vmware-tools-distrib文件夹
+    6.运行vmware-install.pl [./vmware-install.pl],然后一路回车,安装完成
+
+4.删除多余启动项
+    uname -a 查看当前系统内核版本
+    rpm -qa | grep kernel 查看系统中全部的内核RPM包
+    yum remove <想要删除的RPM包名>
+
+5.没有安装ifconfig怎么办
+    yum search ifconfig -> 查看ifconfig在哪个包下
+    yum install net-tools.x86_64 -> 安装该包
