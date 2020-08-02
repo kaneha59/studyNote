@@ -1,5 +1,5 @@
 /usr/bin
-    存放系统级应用,比如jdk,之类的运行环境
+    命令存放目录
 
 /usr/local/bin 
     存放用户级的应用,比如tomcat,mysql之类的

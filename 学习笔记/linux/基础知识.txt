@@ -1,0 +1,4 @@
+1.查看环境变量中的路径(path)配置
+    echo $PATH
+2.查看命令所在位置
+    which passwd

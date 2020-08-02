@@ -1,0 +1,7 @@
+更改默认启动到命令行下：
+
+sudo systemctl set-default multi-user.target
+
+要恢复默认启动到桌面，执行：
+
+systemctl set-default graphical.target

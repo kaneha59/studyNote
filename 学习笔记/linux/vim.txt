@@ -1,7 +1,7 @@
 查看命令图: https://www.runoob.com/linux/linux-vim.html
 
 命令模式:
-    i: 切换到输入模式
+    a: 切换到输入模式
     ggVG: 选中全文
     : 进入底线命令模式
     y: 复制

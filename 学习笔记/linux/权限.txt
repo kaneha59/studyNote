@@ -1,0 +1,37 @@
+chown
+    给文件设置属主和属组
+    chown <属主:属组> <文件或目录>  示例: chown <root:root> /home/root
+
+chmod
+    用于变更文件或目录的权限
+    权限范围:{u:属主, g:属组, o:其他用户, a:全部用户}
+    权限内容:{r:4/读取, w:2/写入, x:1/执行, -:0/无权限}
+    指定方式:{+:增加权限, -:关闭权限, =设定权限}  设定权限指之前的设置无效,完全套用本次设置
+    参数:
+        -R: 递归,所有子文件子目录也一并处理
+    示例:
+        chmod u+x,g+w hello  ==>  #给hello文件设置属主执行权限,属组写入权限
+        chmod a=rw hello  ==>  对hello文件, 给所有用户权限设置为读写权限
+        chmod 777 hello  ==>  对hello文件,给所有用户赋予全部权限(爽!)
+        chmod -R 666 dir  ==>  给dir及目录下所有文件设置666权限(读写)
+su 
+    su <用户名> 登陆并切换到该用户
+    su - <用户名> 完全切换至该用户,登出当前用户
+
+sudo 
+    使用户临时获取root权限
+    使用方法: sudo <命令>
+
+visudo
+    修改sudo的配置文件(/etc/sudoers),只有root用户可修改
+
+    关于/etc/sudoers
+        用于配置用户或用户组使用sudo命令时能够获取到的权限
+        1.env_reset表示重置环境变量,当且仅当你用sudo执行命令的时候,你当前用户所设置的环境变量无效
+        2.使用者  主机 = (用户:用户组) 可执行的命令列表
+           root   ALL =  (ALL:ALL)    ALL   ==>  允许root用户, 在任何主机, 获得任何用户或用户组的权限, 执行任何命令
+           %admin ALL =  (ALL)        ALL   ==>  允许admin用户组的用户, 在任何主机, 获取任何用户组的权限, 执行任何命令
+           lisi   ALL =               ALL   ==>  (用户:用户组)可以省略,省略时表示获取root权限
+        3.注意,指定sudo能执行的命令时,必须使用绝对路径, 可以使用whereis来查找命令的绝对路径地址  例如: whereis cat
+        4.使用sudo时无需输入密码示例:  zhangsan ALL = (ALL:ALL) NOPASSWD: ALL
+        5.问题: 没有在/etc/sudoers中配置的用户执行sudo命令会获得什么权限呢?

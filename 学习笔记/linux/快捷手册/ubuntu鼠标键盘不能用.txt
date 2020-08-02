@@ -1,0 +1,11 @@
+1. 重启系统后按“ESC”进入grub引导界面：
+这里看个人电脑情况，楼主按一下“ESC”就可以进入了。
+
+2. 在引导界面选择 Advanced Options
+3. 选择 带有（Recovery mode ）的选项
+4. 接着选择 Network 并点 yes
+5. 继续选择 Drop to root shell prompt，并点“Enter”
+6. 输入：mount -o rw,remount /
+7. 再输入：apt install xserver-xorg-input-all (这里确保电脑联网)
+等待安装配置完毕，搞定！！
+最后按 “Ctrl+D” 退出， 输入 “sudo reboot” 重启就完事了！

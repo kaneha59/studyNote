@@ -5,3 +5,17 @@
 预计补全时间: 明天(7月29日)
 命令参考:
 https://blog.csdn.net/weixin_34208283/article/details/92569178
+
+补全:
+    1.使用timedatectl --help查看所有命令
+    2.使用timedatectl set-local-rtc 1: 设置rtc时间(real time clock,即主板时间)为本地时间
+    4.使用hwclock --systohc 将RTC时间设置为本地时间
+    3.再使用timedatectl命令,发现local time和RTC time已经一致了.
+    原理不明...
+
+关键命令: 
+    hwclock --help
+    timedatectl --help
+
+问题: 
+    hwclock和timedatectl具体区别?

@@ -1,0 +1,18 @@
+参考网站:https://blog.csdn.net/qq_21095573/article/details/99736630
+
+1.进入清华大学开源镜像站:https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/
+
+2.复制镜像源文本
+
+3.执行命令,备份镜像源配置文件
+    命令: cp /etc/apt/sources.list /etc/apt/sources.list.bak  ==>  备份
+
+4.编辑/etc/apt/sources.list,删除原来的文本,将清华大学镜像源的文本粘贴进去
+    vim操作:
+        dG: 命令从下往上删除直到光标所在行
+        :set paste 可以
+
+5.执行命令
+    命令: apt-get update  ==>  更新镜像源
+
+6.搞定,现在可以使用清华大学的镜像源了,apt下载速度大增
